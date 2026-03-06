@@ -135,13 +135,13 @@ export function AddClientDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="rounded-sm border-border font-mono text-xs"
+              className="rounded-sm border-border font-mono text-xs vader-btn-hover"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="rounded-sm bg-primary text-primary-foreground hover:bg-primary/80 vader-glow-sm font-mono text-xs font-semibold"
+              className="rounded-sm bg-primary text-primary-foreground hover:bg-primary/80 vader-btn-hover font-mono text-xs font-semibold"
             >
               Add Client
             </Button>

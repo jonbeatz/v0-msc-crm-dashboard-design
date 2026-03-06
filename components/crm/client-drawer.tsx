@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import {
   CheckCircle2,
+  CheckSquare,
   Circle,
   Copy,
   CreditCard,
@@ -10,9 +11,11 @@ import {
   Eye,
   EyeOff,
   Key,
+  Mail,
   Phone,
   Shield,
   User,
+  UserCheck,
   Film,
 } from 'lucide-react'
 import {
@@ -24,6 +27,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
+import { CircularProgress } from '@/components/crm/circular-progress'
 import { TASK_STEPS, type Client } from '@/lib/crm-data'
 import { cn } from '@/lib/utils'
 
@@ -33,6 +37,13 @@ interface ClientDrawerProps {
   onOpenChange: (open: boolean) => void
   onUpdateClient: (client: Client) => void
 }
+
+// Mock Fluent ecosystem activity
+const fluentActivity = [
+  { id: 1, type: 'smtp', message: 'Welcome email sent', time: '2h ago' },
+  { id: 2, type: 'crm', message: 'Tagged as "Active Client"', time: '1d ago' },
+  { id: 3, type: 'boards', message: 'Added to Onboarding board', time: '2d ago' },
+]
 
 export function ClientDrawer({
   client,
@@ -45,6 +56,9 @@ export function ClientDrawer({
 
   if (!client) return null
 
+  const completedCount = client.completedSteps.filter(Boolean).length
+  const percentage = Math.round((completedCount / 5) * 100)
+
   const handleTaskToggle = (index: number) => {
     const newCompletedSteps = [...client.completedSteps]
     newCompletedSteps[index] = !newCompletedSteps[index]
@@ -56,6 +70,19 @@ export function ClientDrawer({
       await navigator.clipboard.writeText(client.password)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  const getFluentIcon = (type: string) => {
+    switch (type) {
+      case 'smtp':
+        return <Mail className="h-3 w-3 text-primary" />
+      case 'crm':
+        return <UserCheck className="h-3 w-3 text-primary" />
+      case 'boards':
+        return <CheckSquare className="h-3 w-3 text-primary" />
+      default:
+        return null
     }
   }
 
@@ -72,15 +99,78 @@ export function ClientDrawer({
               Clean Record
             </SheetTitle>
           </div>
-          <div className="mt-3">
-            <h2 className="text-xl font-semibold text-foreground">{client.name}</h2>
-            <p className="font-mono text-xs text-muted-foreground mt-1">
-              {client.projectId}
-            </p>
+          <div className="mt-3 flex items-start gap-4">
+            <CircularProgress percentage={percentage} size={56} strokeWidth={4} />
+            <div className="flex-1">
+              <h2 className="text-xl font-semibold text-foreground">{client.name}</h2>
+              <p className="font-mono text-xs text-muted-foreground mt-1">
+                {client.projectId}
+              </p>
+              {/* Tactical Status Badges */}
+              <div className="mt-2 flex items-center gap-2">
+                <Badge
+                  className={cn(
+                    'font-mono text-[10px] rounded-sm px-2 py-0.5',
+                    client.depositPaid
+                      ? 'bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30'
+                      : 'bg-destructive/20 text-destructive border border-destructive/30 hover:bg-destructive/30 vader-critical-pulse'
+                  )}
+                >
+                  {client.depositPaid ? 'DEPOSIT PAID' : 'UNPAID'}
+                </Badge>
+                <Badge
+                  className={cn(
+                    'font-mono text-[10px] rounded-sm px-2 py-0.5',
+                    client.consultingCall
+                      ? 'bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30'
+                      : 'bg-muted text-muted-foreground border border-border hover:bg-muted/80'
+                  )}
+                >
+                  {client.consultingCall ? 'CALL DONE' : 'NO CALL'}
+                </Badge>
+              </div>
+            </div>
           </div>
         </SheetHeader>
 
         <div className="flex flex-col gap-5 py-5">
+          {/* Fluent Ecosystem Activity Feed */}
+          <section>
+            <h3 className="mb-2.5 flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <Mail className="h-3.5 w-3.5" />
+              Communication Feed
+            </h3>
+            <div className="rounded-sm border border-border bg-background overflow-hidden">
+              <div className="flex items-center gap-4 border-b border-border px-3 py-2 bg-muted/30">
+                <div className="flex items-center gap-1.5">
+                  <Mail className="h-3 w-3 text-muted-foreground" />
+                  <span className="font-mono text-[9px] uppercase text-muted-foreground">SMTP</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <UserCheck className="h-3 w-3 text-muted-foreground" />
+                  <span className="font-mono text-[9px] uppercase text-muted-foreground">CRM</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckSquare className="h-3 w-3 text-muted-foreground" />
+                  <span className="font-mono text-[9px] uppercase text-muted-foreground">Boards</span>
+                </div>
+              </div>
+              <div className="divide-y divide-border">
+                {fluentActivity.map((activity) => (
+                  <div key={activity.id} className="flex items-center gap-3 px-3 py-2">
+                    {getFluentIcon(activity.type)}
+                    <span className="flex-1 font-mono text-xs text-foreground">
+                      {activity.message}
+                    </span>
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      {activity.time}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* Financials Section */}
           <section>
             <h3 className="mb-2.5 flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -115,8 +205,8 @@ export function ClientDrawer({
                   className={cn(
                     'font-mono text-[10px] rounded-sm px-2 py-0',
                     client.depositPaid
-                      ? 'bg-primary text-primary-foreground vader-glow-sm'
-                      : 'bg-destructive text-destructive-foreground vader-alert-glow'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-destructive text-destructive-foreground vader-critical-pulse'
                   )}
                 >
                   {client.depositPaid ? 'PAID' : 'UNPAID'}
@@ -125,39 +215,44 @@ export function ClientDrawer({
             </div>
           </section>
 
-          {/* The Vault Section - Encrypted Data Block Look */}
+          {/* The Vault Section - Secure Terminal Look */}
           <section>
             <h3 className="mb-2.5 flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               <Key className="h-3.5 w-3.5" />
               The Vault
             </h3>
-            <div className="rounded-sm border border-primary/30 bg-background overflow-hidden">
-              {/* Encrypted Header Bar */}
-              <div className="flex items-center gap-2 border-b border-primary/20 bg-primary/5 px-3 py-1.5">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
-                  Encrypted Access
+            <div className="rounded-sm border border-primary/30 bg-[#0d0d0d] overflow-hidden">
+              {/* Secure Terminal Header */}
+              <div className="flex items-center justify-between border-b border-primary/20 bg-primary/5 px-3 py-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
+                    Secure Terminal
+                  </span>
+                </div>
+                <span className="font-mono text-[9px] text-muted-foreground">
+                  AES-256
                 </span>
               </div>
               
-              <div className="p-3 space-y-3">
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              <div className="p-3 space-y-3 font-mono">
+                <div className="space-y-1">
+                  <label className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-primary/70">
                     <User className="h-3 w-3" />
-                    Login User
+                    User
                   </label>
-                  <div className="rounded-sm border border-border bg-muted/30 px-3 py-2 font-mono text-sm text-foreground tracking-wide">
+                  <div className="rounded-none border border-border/50 bg-[#0a0a0a] px-3 py-2 text-sm text-primary tracking-wide">
                     {client.loginUser || '—'}
                   </div>
                 </div>
                 
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                <div className="space-y-1">
+                  <label className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-primary/70">
                     <Key className="h-3 w-3" />
-                    Password
+                    Pass
                   </label>
-                  <div className="flex items-center gap-1.5">
-                    <div className="flex-1 rounded-sm border border-border bg-muted/30 px-3 py-2 font-mono text-sm text-foreground tracking-widest">
+                  <div className="flex items-center gap-1">
+                    <div className="flex-1 rounded-none border border-border/50 bg-[#0a0a0a] px-3 py-2 text-sm text-primary tracking-[0.3em]">
                       {client.password
                         ? showPassword
                           ? client.password
@@ -170,7 +265,7 @@ export function ClientDrawer({
                           variant="ghost"
                           size="icon"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="h-9 w-9 rounded-sm text-muted-foreground hover:text-primary hover:bg-primary/10"
+                          className="h-9 w-9 rounded-none text-primary/50 hover:text-primary hover:bg-primary/10 vader-btn-hover"
                         >
                           {showPassword ? (
                             <EyeOff className="h-4 w-4" />
@@ -183,7 +278,7 @@ export function ClientDrawer({
                           size="icon"
                           onClick={handleCopyPassword}
                           className={cn(
-                            'h-9 w-9 rounded-sm text-muted-foreground hover:text-primary hover:bg-primary/10',
+                            'h-9 w-9 rounded-none text-primary/50 hover:text-primary hover:bg-primary/10 vader-btn-hover',
                             copied && 'text-primary'
                           )}
                         >
@@ -196,7 +291,7 @@ export function ClientDrawer({
                 
                 <Button
                   disabled={!client.wpLoginUrl}
-                  className="w-full rounded-sm bg-primary text-primary-foreground hover:bg-primary/80 vader-glow-sm font-mono text-xs font-semibold disabled:opacity-40 mt-2"
+                  className="w-full rounded-none bg-primary text-primary-foreground hover:bg-primary/80 vader-btn-hover font-mono text-xs font-semibold disabled:opacity-40 mt-2"
                   onClick={() => client.wpLoginUrl && window.open(client.wpLoginUrl, '_blank')}
                 >
                   <ExternalLink className="mr-2 h-3.5 w-3.5" />
@@ -213,41 +308,52 @@ export function ClientDrawer({
               Production Tasks
             </h3>
             <div className="space-y-1.5">
-              {TASK_STEPS.map((step, index) => (
-                <div
-                  key={step}
-                  className={cn(
-                    'flex items-center gap-3 rounded-sm border border-border bg-background p-2.5 transition-all duration-200',
-                    client.completedSteps[index] && 'border-primary/30 bg-primary/5'
-                  )}
-                >
-                  <Checkbox
-                    id={`task-${index}`}
-                    checked={client.completedSteps[index]}
-                    onCheckedChange={() => handleTaskToggle(index)}
-                    className="rounded-sm border-muted-foreground data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                  />
-                  <span className="font-mono text-xs text-muted-foreground w-5">
-                    {index + 1}.
-                  </span>
-                  <label
-                    htmlFor={`task-${index}`}
+              {TASK_STEPS.map((step, index) => {
+                const isOverdue = client.priority === 'high' && !client.completedSteps[index] && index <= completedCount
+                return (
+                  <div
+                    key={step}
                     className={cn(
-                      'flex-1 cursor-pointer font-mono text-xs transition-all',
-                      client.completedSteps[index]
-                        ? 'text-primary'
-                        : 'text-foreground'
+                      'flex items-center gap-3 rounded-sm border border-border bg-background p-2.5 transition-all duration-200',
+                      client.completedSteps[index] && 'border-primary/30 bg-primary/5',
+                      isOverdue && 'border-destructive/50 bg-destructive/5 vader-critical-pulse'
                     )}
                   >
-                    {step}
-                  </label>
-                  {client.completedSteps[index] ? (
-                    <CheckCircle2 className="h-4 w-4 text-primary" />
-                  ) : (
-                    <Circle className="h-4 w-4 text-muted-foreground/50" />
-                  )}
-                </div>
-              ))}
+                    <Checkbox
+                      id={`task-${index}`}
+                      checked={client.completedSteps[index]}
+                      onCheckedChange={() => handleTaskToggle(index)}
+                      className="rounded-sm border-muted-foreground data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    />
+                    <span className={cn(
+                      'font-mono text-xs w-5',
+                      isOverdue ? 'text-destructive' : 'text-muted-foreground'
+                    )}>
+                      {index + 1}.
+                    </span>
+                    <label
+                      htmlFor={`task-${index}`}
+                      className={cn(
+                        'flex-1 cursor-pointer font-mono text-xs transition-all',
+                        client.completedSteps[index]
+                          ? 'text-primary'
+                          : isOverdue
+                            ? 'text-destructive'
+                            : 'text-foreground'
+                      )}
+                    >
+                      {step}
+                    </label>
+                    {client.completedSteps[index] ? (
+                      <CheckCircle2 className="h-4 w-4 text-primary" />
+                    ) : isOverdue ? (
+                      <Circle className="h-4 w-4 text-destructive animate-pulse" />
+                    ) : (
+                      <Circle className="h-4 w-4 text-muted-foreground/50" />
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </section>
         </div>

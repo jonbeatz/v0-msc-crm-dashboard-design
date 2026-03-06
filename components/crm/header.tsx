@@ -1,8 +1,9 @@
 'use client'
 
-import { Search, Plus, Film } from 'lucide-react'
+import { Search, Plus, Film, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Sparkline } from '@/components/crm/sparkline'
 
 interface HeaderProps {
   searchQuery: string
@@ -10,10 +11,13 @@ interface HeaderProps {
   onQuickAdd: () => void
 }
 
+// Mock velocity data for last 7 days
+const velocityData = [3, 5, 4, 7, 6, 8, 9]
+
 export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps) {
   return (
     <header className="flex items-center justify-between border-b border-border bg-card px-6 py-4">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
           {/* Minimalist MSC Icon */}
           <div className="relative flex h-9 w-9 items-center justify-center rounded-sm border border-primary/50 bg-background">
@@ -25,6 +29,18 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps)
             <span className="text-muted-foreground mx-1">//</span>
             <span className="text-muted-foreground text-sm">VADER-01</span>
           </h1>
+        </div>
+
+        {/* Project Velocity Sparkline */}
+        <div className="hidden md:flex items-center gap-3 border-l border-border pl-6">
+          <div className="flex items-center gap-2">
+            <Activity className="h-3.5 w-3.5 text-primary" />
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              Velocity
+            </span>
+          </div>
+          <Sparkline data={velocityData} width={100} height={24} />
+          <span className="font-mono text-xs text-primary font-semibold">+12%</span>
         </div>
       </div>
 
@@ -41,7 +57,7 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps)
         </div>
         <Button
           onClick={onQuickAdd}
-          className="rounded-sm bg-primary text-primary-foreground hover:bg-primary/80 vader-glow-sm font-mono text-sm font-semibold transition-all duration-200"
+          className="rounded-sm bg-primary text-primary-foreground hover:bg-primary/80 vader-btn-hover font-mono text-sm font-semibold transition-all duration-200"
         >
           <Plus className="mr-2 h-4 w-4" />
           Quick Add
