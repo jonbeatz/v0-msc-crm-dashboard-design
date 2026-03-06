@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { X, CalendarDays, ChevronLeft, ChevronRight, Clock, User, AlertTriangle, Plus } from 'lucide-react'
+import { X, CalendarDays, ChevronLeft, ChevronRight, Clock, User, AlertTriangle, Plus, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { TASK_STEPS, type Task, type Client } from '@/lib/crm-data'
