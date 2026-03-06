@@ -239,16 +239,16 @@ export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarMo
                   classNames={{
                     months: "w-full",
                     month: "w-full",
-                    table: "w-full",
+                    table: "w-full border-separate border-spacing-2",
                     head_row: "flex w-full",
-                    head_cell: "text-muted-foreground rounded-md flex-1 font-medium text-sm py-2",
-                    row: "flex w-full mt-2",
+                    head_cell: "text-muted-foreground rounded-md flex-1 font-medium text-sm py-3",
+                    row: "flex w-full",
                     cell: cn(
-                      "relative flex-1 p-0 text-center focus-within:relative focus-within:z-20",
+                      "relative flex-1 p-1 text-center focus-within:relative focus-within:z-20",
                       "[&:has([aria-selected])]:bg-primary/10 [&:has([aria-selected])]:rounded-xl"
                     ),
                     day: cn(
-                      "h-12 w-full p-0 font-normal text-sm",
+                      "h-16 w-full p-0 font-normal text-sm",
                       "hover:bg-white/[0.06] rounded-xl transition-colors",
                       "aria-selected:bg-primary aria-selected:text-primary-foreground"
                     ),
@@ -265,16 +265,16 @@ export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarMo
                       const eventInfo = eventDates[dateKey]
                       
                       return (
-                        <button
-                          {...props}
-                          className={cn(
-                            "relative h-12 w-full p-0 font-normal rounded-xl transition-all text-sm",
-                            "hover:bg-white/[0.06]",
-                            modifiers.selected && "bg-primary text-primary-foreground hover:bg-primary/80",
-                            modifiers.today && !modifiers.selected && "bg-accent/20 text-accent",
-                            modifiers.outside && "text-muted-foreground opacity-50"
-                          )}
-                        >
+<button
+                                          {...props}
+                                          className={cn(
+                                            "relative h-16 w-full p-0 font-normal rounded-xl transition-all text-sm",
+                                            "hover:bg-white/[0.06]",
+                                            modifiers.selected && "bg-primary text-primary-foreground hover:bg-primary/80",
+                                            modifiers.today && !modifiers.selected && "bg-accent/20 text-accent",
+                                            modifiers.outside && "text-muted-foreground opacity-50"
+                                          )}
+                                        >
                           {day.date.getDate()}
                           {eventInfo && (
                             <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 flex gap-1">
