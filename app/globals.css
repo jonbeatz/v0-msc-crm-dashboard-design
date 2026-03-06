@@ -6,7 +6,7 @@
 /* Vader Protocol Theme - Refined Studio Console - Electric Green (#00ff88) */
 
 @theme inline {
-  --font-sans: 'Outfit', 'Outfit Fallback', system-ui, sans-serif;
+  --font-sans: 'Geist', 'Geist Fallback', system-ui, sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
   --color-background: #121212;
   --color-foreground: #e8e8e8;

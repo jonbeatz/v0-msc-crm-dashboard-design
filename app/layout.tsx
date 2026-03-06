@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { Outfit, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _outfit = Outfit({ subsets: ["latin"], variable: '--font-outfit' });
-const _geistMono = Geist_Mono({ subsets: ["latin"], variable: '--font-geist-mono' });
+const _geist = Geist({ subsets: ["latin"] });
+const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: 'MSC Media CRM // VADER-01',
