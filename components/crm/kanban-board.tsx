@@ -7,52 +7,53 @@ import { cn } from '@/lib/utils'
 interface KanbanBoardProps {
   clients: Client[]
   onClientSelect: (client: Client) => void
+  recentlyUpdatedId?: string
 }
 
-export function KanbanBoard({ clients, onClientSelect }: KanbanBoardProps) {
+export function KanbanBoard({ clients, onClientSelect, recentlyUpdatedId }: KanbanBoardProps) {
   const getClientsForStage = (stageIndex: number) => {
     return clients.filter((client) => client.currentStep === stageIndex)
   }
 
   return (
-    <div className="flex-1 overflow-x-auto p-6">
-      <div className="flex gap-4 min-w-max">
+    <div className="flex-1 overflow-x-auto p-4">
+      <div className="flex gap-3 min-w-max">
         {PIPELINE_STAGES.map((stage, index) => {
           const stageClients = getClientsForStage(index)
           
           return (
             <div
               key={stage}
-              className="w-72 flex-shrink-0 rounded-lg border border-border bg-card/50"
+              className="w-64 flex-shrink-0 rounded-sm border border-border bg-card/30"
             >
               {/* Column Header */}
-              <div className="flex items-center justify-between border-b border-border px-4 py-3">
+              <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
                 <div className="flex items-center gap-2">
                   <div
                     className={cn(
                       'h-2 w-2 rounded-full',
                       index === 5
-                        ? 'bg-[#00ff88]'
+                        ? 'bg-primary vader-progress-glow'
                         : index === 0
                         ? 'bg-muted-foreground'
-                        : 'bg-primary'
+                        : 'bg-muted-foreground/60'
                     )}
                   />
-                  <h2 className="font-mono text-sm font-semibold text-foreground">
+                  <h2 className="font-mono text-xs font-semibold uppercase tracking-wider text-foreground">
                     {stage}
                   </h2>
                 </div>
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted font-mono text-xs text-muted-foreground">
+                <span className="flex h-5 w-5 items-center justify-center rounded-sm bg-muted font-mono text-xs text-muted-foreground">
                   {stageClients.length}
                 </span>
               </div>
 
               {/* Column Content */}
-              <div className="flex flex-col gap-3 p-3 min-h-[200px]">
+              <div className="flex flex-col gap-2 p-2 min-h-[180px]">
                 {stageClients.length === 0 ? (
-                  <div className="flex h-24 items-center justify-center rounded-lg border border-dashed border-border/50">
+                  <div className="flex h-20 items-center justify-center rounded-sm border border-dashed border-border/50">
                     <p className="font-mono text-xs text-muted-foreground">
-                      No clients
+                      Empty
                     </p>
                   </div>
                 ) : (
@@ -61,6 +62,7 @@ export function KanbanBoard({ clients, onClientSelect }: KanbanBoardProps) {
                       key={client.id}
                       client={client}
                       onClick={() => onClientSelect(client)}
+                      isRecentlyUpdated={client.id === recentlyUpdatedId}
                     />
                   ))
                 )}

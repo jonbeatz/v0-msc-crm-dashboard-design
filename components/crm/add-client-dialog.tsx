@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Hash, Link2 } from 'lucide-react'
+import { User, Hash, Link2, AlertTriangle, Film } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -58,17 +58,17 @@ export function AddClientDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-border bg-card sm:max-w-md">
+      <DialogContent className="rounded-sm border-border bg-card sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 font-mono text-lg tracking-wide text-foreground">
-            <User className="h-5 w-5 text-primary" />
-            Quick Add Client
+          <DialogTitle className="flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-foreground">
+            <Film className="h-4 w-4 text-primary" />
+            New Client
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="name" className="flex items-center gap-2 font-mono text-sm text-muted-foreground">
+        <form onSubmit={handleSubmit} className="space-y-3 py-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="name" className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
               <User className="h-3 w-3" />
               Client Name
             </Label>
@@ -78,12 +78,12 @@ export function AddClientDialog({
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter client name"
               required
-              className="border-border bg-background font-mono placeholder:text-muted-foreground focus:border-primary"
+              className="rounded-sm border-border bg-background font-mono text-sm placeholder:text-muted-foreground focus:border-primary"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="projectId" className="flex items-center gap-2 font-mono text-sm text-muted-foreground">
+          <div className="space-y-1.5">
+            <Label htmlFor="projectId" className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
               <Hash className="h-3 w-3" />
               Project ID
             </Label>
@@ -91,13 +91,13 @@ export function AddClientDialog({
               id="projectId"
               value={projectId}
               onChange={(e) => setProjectId(e.target.value)}
-              placeholder="msc_indie_XX (auto-generated if empty)"
-              className="border-border bg-background font-mono placeholder:text-muted-foreground focus:border-primary"
+              placeholder="msc_indie_XX (auto-generated)"
+              className="rounded-sm border-border bg-background font-mono text-sm placeholder:text-muted-foreground focus:border-primary"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="wpLoginUrl" className="flex items-center gap-2 font-mono text-sm text-muted-foreground">
+          <div className="space-y-1.5">
+            <Label htmlFor="wpLoginUrl" className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
               <Link2 className="h-3 w-3" />
               WP-Login URL
             </Label>
@@ -106,18 +106,21 @@ export function AddClientDialog({
               value={wpLoginUrl}
               onChange={(e) => setWpLoginUrl(e.target.value)}
               placeholder="https://example.com/wp-login.php"
-              className="border-border bg-background font-mono placeholder:text-muted-foreground focus:border-primary"
+              className="rounded-sm border-border bg-background font-mono text-sm placeholder:text-muted-foreground focus:border-primary"
             />
           </div>
 
-          <div className="flex items-center justify-between rounded-lg border border-border bg-background p-3">
-            <div className="space-y-0.5">
-              <Label htmlFor="priority" className="font-mono text-sm text-foreground">
-                High Priority
-              </Label>
-              <p className="font-mono text-xs text-muted-foreground">
-                Mark this client as urgent
-              </p>
+          <div className="flex items-center justify-between rounded-sm border border-border bg-background p-2.5">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-3.5 w-3.5 text-destructive" />
+              <div className="space-y-0">
+                <Label htmlFor="priority" className="font-mono text-xs text-foreground">
+                  High Priority
+                </Label>
+                <p className="font-mono text-[10px] text-muted-foreground">
+                  Mark as urgent
+                </p>
+              </div>
             </div>
             <Switch
               id="priority"
@@ -127,18 +130,18 @@ export function AddClientDialog({
             />
           </div>
 
-          <DialogFooter className="pt-4">
+          <DialogFooter className="pt-3 gap-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-border font-mono"
+              className="rounded-sm border-border font-mono text-xs"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 vader-glow-sm font-mono font-semibold"
+              className="rounded-sm bg-primary text-primary-foreground hover:bg-primary/80 vader-glow-sm font-mono text-xs font-semibold"
             >
               Add Client
             </Button>

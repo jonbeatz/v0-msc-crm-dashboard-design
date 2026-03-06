@@ -11,38 +11,38 @@
   --card-foreground: #e5e5e5;
   --popover: #1c1c1c;
   --popover-foreground: #e5e5e5;
-  --primary: #00d4ff;
+  --primary: #00ff88;
   --primary-foreground: #121212;
   --secondary: #1c1c1c;
   --secondary-foreground: #e5e5e5;
   --muted: #2d2d2d;
-  --muted-foreground: #a3a3a3;
-  --accent: #00d4ff;
+  --muted-foreground: #6b6b6b;
+  --accent: #00ff88;
   --accent-foreground: #121212;
-  --destructive: #ff4d4d;
+  --destructive: #ff3e3e;
   --destructive-foreground: #ffffff;
   --border: #2d2d2d;
   --input: #2d2d2d;
-  --ring: #00d4ff;
-  --chart-1: #00d4ff;
-  --chart-2: #00a8cc;
-  --chart-3: #007b99;
-  --chart-4: #ff4d4d;
-  --chart-5: #ff7a7a;
-  --radius: 0.5rem;
+  --ring: #00ff88;
+  --chart-1: #00ff88;
+  --chart-2: #00cc6a;
+  --chart-3: #009950;
+  --chart-4: #ff3e3e;
+  --chart-5: #ff6b6b;
+  --radius: 0.25rem;
   --sidebar: #1c1c1c;
   --sidebar-foreground: #e5e5e5;
-  --sidebar-primary: #00d4ff;
+  --sidebar-primary: #00ff88;
   --sidebar-primary-foreground: #121212;
   --sidebar-accent: #2d2d2d;
   --sidebar-accent-foreground: #e5e5e5;
   --sidebar-border: #2d2d2d;
-  --sidebar-ring: #00d4ff;
+  --sidebar-ring: #00ff88;
   
   /* Custom Vader Protocol Variables */
   --vader-surface: #1c1c1c;
-  --vader-glow: #00d4ff;
-  --vader-alert: #ff4d4d;
+  --vader-glow: #00ff88;
+  --vader-alert: #ff3e3e;
   --vader-success: #00ff88;
 }
 
@@ -96,25 +96,30 @@
   }
 }
 
-/* Vader Protocol Glow Effects */
+/* Vader Protocol Glow Effects - Electric Green */
 .vader-glow {
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), 0 0 40px rgba(0, 212, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 40px rgba(0, 255, 136, 0.1);
 }
 
 .vader-glow-sm {
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 212, 255, 0.1);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.25), 0 0 20px rgba(0, 255, 136, 0.1);
 }
 
 .vader-glow-text {
-  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
 }
 
 .vader-alert-glow {
-  box-shadow: 0 0 15px rgba(255, 77, 77, 0.3), 0 0 30px rgba(255, 77, 77, 0.1);
+  box-shadow: 0 0 15px rgba(255, 62, 62, 0.4), 0 0 30px rgba(255, 62, 62, 0.15);
 }
 
 .vader-progress-glow {
-  box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+}
+
+/* Vader Active Card Glow Border */
+.vader-active-border {
+  box-shadow: 0 0 0 1px #00ff88, 0 0 15px rgba(0, 255, 136, 0.3);
 }
 
 /* Custom Scrollbar for Vader Theme */
@@ -133,5 +138,5 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00d4ff;
+  background: #00ff88;
 }

@@ -14,6 +14,7 @@ export default function CRMDashboard() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [recentlyUpdatedId, setRecentlyUpdatedId] = useState<string | undefined>(undefined)
 
   const filteredClients = useMemo(() => {
     if (!searchQuery.trim()) return clients
@@ -36,10 +37,12 @@ export default function CRMDashboard() {
       prev.map((c) => (c.id === updatedClient.id ? updatedClient : c))
     )
     setSelectedClient(updatedClient)
+    setRecentlyUpdatedId(updatedClient.id)
   }
 
   const handleAddClient = (newClient: Client) => {
     setClients((prev) => [...prev, newClient])
+    setRecentlyUpdatedId(newClient.id)
   }
 
   return (
@@ -54,6 +57,7 @@ export default function CRMDashboard() {
         <KanbanBoard
           clients={filteredClients}
           onClientSelect={handleClientSelect}
+          recentlyUpdatedId={recentlyUpdatedId}
         />
         <ActivityFeed activities={mockActivities} />
       </div>
