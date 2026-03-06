@@ -1,11 +1,20 @@
 'use client'
 
-import { Search, Plus, Film, Activity, Monitor, BarChart3, CalendarDays } from 'lucide-react'
+import { Search, Plus, Film, Activity, Monitor, BarChart3, CalendarDays, ChevronDown, Folder, Archive, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Sparkline } from '@/components/crm/sparkline'
 import { GlobalStatusGauge } from '@/components/crm/global-status-gauge'
 import { cn } from '@/lib/utils'
+import { type Project } from '@/lib/crm-data'
 
 export type ViewMode = 'technical' | 'executive'
 
@@ -16,12 +25,18 @@ interface HeaderProps {
   viewMode: ViewMode
   onViewModeChange: (mode: ViewMode) => void
   onOpenCalendar: () => void
+  projects: Project[]
+  selectedProjectId: string
+  onProjectChange: (projectId: string) => void
 }
 
 // Mock velocity data for last 7 days
 const velocityData = [3, 5, 4, 7, 6, 8, 9]
 
-export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onViewModeChange, onOpenCalendar }: HeaderProps) {
+export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onViewModeChange, onOpenCalendar, projects, selectedProjectId, onProjectChange }: HeaderProps) {
+  const selectedProject = projects.find(p => p.id === selectedProjectId)
+  const activeProjects = projects.filter(p => p.status === 'active')
+  const archivedProjects = projects.filter(p => p.status === 'archived')
 
   return (
     <header className="flex items-center justify-between glass-card border-b border-white/[0.06] px-8 py-5">
@@ -40,6 +55,70 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onVi
             </h1>
             <p className="text-xs text-muted-foreground">Media Dashboard</p>
           </div>
+        </div>
+
+        {/* Project Selector Dropdown */}
+        <div className="border-l border-white/[0.06] pl-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="flex items-center gap-3 rounded-xl px-4 py-2.5 bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.06] hover:border-primary/30 transition-all"
+              >
+                <Folder className="h-4 w-4 text-primary" />
+                <div className="text-left">
+                  <p className="text-sm font-medium text-foreground">{selectedProject?.name || 'Select Project'}</p>
+                  <p className="text-[10px] text-muted-foreground">{selectedProject?.clientCount || 0} clients</p>
+                </div>
+                <ChevronDown className="h-4 w-4 text-muted-foreground ml-2" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-64 rounded-xl bg-background/95 backdrop-blur-xl border-white/[0.08]">
+              <DropdownMenuLabel className="text-xs text-muted-foreground">Active Projects</DropdownMenuLabel>
+              {activeProjects.map((project) => (
+                <DropdownMenuItem
+                  key={project.id}
+                  onClick={() => onProjectChange(project.id)}
+                  className="flex items-center justify-between rounded-lg cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <Folder className="h-4 w-4 text-primary/70" />
+                    <div>
+                      <p className="text-sm font-medium">{project.name}</p>
+                      <p className="text-[10px] text-muted-foreground">{project.clientCount} clients</p>
+                    </div>
+                  </div>
+                  {project.id === selectedProjectId && (
+                    <Check className="h-4 w-4 text-primary" />
+                  )}
+                </DropdownMenuItem>
+              ))}
+              {archivedProjects.length > 0 && (
+                <>
+                  <DropdownMenuSeparator className="bg-white/[0.06]" />
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">Archived</DropdownMenuLabel>
+                  {archivedProjects.map((project) => (
+                    <DropdownMenuItem
+                      key={project.id}
+                      onClick={() => onProjectChange(project.id)}
+                      className="flex items-center justify-between rounded-lg cursor-pointer opacity-60"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Archive className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm font-medium">{project.name}</p>
+                          <p className="text-[10px] text-muted-foreground">{project.clientCount} clients</p>
+                        </div>
+                      </div>
+                      {project.id === selectedProjectId && (
+                        <Check className="h-4 w-4 text-primary" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Project Velocity Sparkline */}

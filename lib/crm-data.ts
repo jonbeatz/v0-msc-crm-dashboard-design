@@ -1,3 +1,10 @@
+export interface Project {
+  id: string
+  name: string
+  clientCount: number
+  status: 'active' | 'archived' | 'draft'
+}
+
 export interface Client {
   id: string
   name: string
@@ -190,6 +197,33 @@ export const mockTasks: Task[] = [
     dueAt: new Date(Date.now() + 1000 * 60 * 60 * 48), // 2 days from now
     assignedToMe: false,
     completed: true,
+  },
+]
+
+export const mockProjects: Project[] = [
+  {
+    id: 'proj_1',
+    name: 'MSC Indie Artists',
+    clientCount: 6,
+    status: 'active',
+  },
+  {
+    id: 'proj_2',
+    name: 'Label Services',
+    clientCount: 12,
+    status: 'active',
+  },
+  {
+    id: 'proj_3',
+    name: 'Distribution Partners',
+    clientCount: 4,
+    status: 'active',
+  },
+  {
+    id: 'proj_4',
+    name: 'Legacy Clients',
+    clientCount: 23,
+    status: 'archived',
   },
 ]
 

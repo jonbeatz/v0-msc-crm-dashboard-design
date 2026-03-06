@@ -12,7 +12,7 @@ import { QuickCommandBar } from '@/components/crm/quick-command-bar'
 import { StatusBar } from '@/components/crm/status-bar'
 import { TacticalActionCenter } from '@/components/crm/tactical-action-center'
 import { CalendarModal } from '@/components/crm/calendar-modal'
-import { mockClients, mockActivities, mockTasks, type Client, type Task } from '@/lib/crm-data'
+import { mockClients, mockActivities, mockTasks, mockProjects, type Client, type Task } from '@/lib/crm-data'
 
 export default function CRMDashboard() {
   const [clients, setClients] = useState<Client[]>(mockClients)
@@ -25,6 +25,7 @@ export default function CRMDashboard() {
   const [recentlyUpdatedId, setRecentlyUpdatedId] = useState<string | undefined>(undefined)
   const [stepFilter, setStepFilter] = useState<{ clientId: string; stepIndex: number } | null>(null)
   const [calendarOpen, setCalendarOpen] = useState(false)
+  const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0]?.id || '')
 
   const filteredClients = useMemo(() => {
     if (!searchQuery.trim()) return clients
@@ -101,6 +102,9 @@ export default function CRMDashboard() {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         onOpenCalendar={() => setCalendarOpen(true)}
+        projects={mockProjects}
+        selectedProjectId={selectedProjectId}
+        onProjectChange={setSelectedProjectId}
       />
 
       {viewMode === 'technical' ? (
