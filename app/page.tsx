@@ -25,13 +25,13 @@ export default function CRMDashboard() {
   const [recentlyUpdatedId, setRecentlyUpdatedId] = useState<string | undefined>(undefined)
   const [stepFilter, setStepFilter] = useState<{ clientId: string; stepIndex: number } | null>(null)
   const [calendarOpen, setCalendarOpen] = useState(false)
-  const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0]?.id || '')
+  const [selectedProjectId, setSelectedProjectId] = useState('all')
 
   const filteredClients = useMemo(() => {
     let filtered = clients
     
-    // Filter by selected project
-    if (selectedProjectId) {
+    // Filter by selected project (skip if 'all' is selected)
+    if (selectedProjectId && selectedProjectId !== 'all') {
       filtered = filtered.filter(client => client.projectId === selectedProjectId)
     }
     

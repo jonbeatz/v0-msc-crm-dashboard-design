@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, Plus, Film, Activity, Monitor, BarChart3, CalendarDays, ChevronDown, Folder, Archive, Check } from 'lucide-react'
+import { Search, Plus, Film, Activity, Monitor, BarChart3, CalendarDays, ChevronDown, Folder, Archive, Check, LayoutGrid } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -37,6 +37,8 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onVi
   const selectedProject = projects.find(p => p.id === selectedProjectId)
   const activeProjects = projects.filter(p => p.status === 'active')
   const archivedProjects = projects.filter(p => p.status === 'archived')
+  const totalClients = projects.reduce((sum, p) => sum + p.clientCount, 0)
+  const isAllProjects = selectedProjectId === 'all'
 
   return (
     <header className="flex items-center justify-between glass-card border-b border-white/[0.06] px-4 md:px-6 lg:px-8 py-4">
@@ -63,14 +65,36 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onVi
               type="button"
               className="flex items-center gap-2 rounded-xl px-3 py-2 bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.06] hover:border-primary/30 transition-all"
             >
-              <Folder className="h-4 w-4 text-primary flex-shrink-0" />
+              {isAllProjects ? (
+                <LayoutGrid className="h-4 w-4 text-primary flex-shrink-0" />
+              ) : (
+                <Folder className="h-4 w-4 text-primary flex-shrink-0" />
+              )}
               <span className="text-sm font-medium text-foreground truncate max-w-[120px] lg:max-w-[160px]">
-                {selectedProject?.name || 'Select Project'}
+                {isAllProjects ? 'All Projects' : selectedProject?.name || 'Select Project'}
               </span>
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-64 rounded-xl bg-background/95 backdrop-blur-xl border-white/[0.08]">
+            {/* All Projects Option */}
+            <DropdownMenuItem
+              onClick={() => onProjectChange('all')}
+              className="flex items-center justify-between rounded-lg cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <LayoutGrid className="h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-sm font-medium">All Projects</p>
+                  <p className="text-[10px] text-muted-foreground">{totalClients} total clients</p>
+                </div>
+              </div>
+              {isAllProjects && (
+                <Check className="h-4 w-4 text-primary" />
+              )}
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator className="bg-white/[0.06]" />
             <DropdownMenuLabel className="text-xs text-muted-foreground">Active Projects</DropdownMenuLabel>
             {activeProjects.map((project) => (
               <DropdownMenuItem
