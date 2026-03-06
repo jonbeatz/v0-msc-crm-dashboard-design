@@ -3,88 +3,47 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Vader Protocol Theme - Dark Cinematic CRM */
-:root {
-  --background: #121212;
-  --foreground: #e5e5e5;
-  --card: #1c1c1c;
-  --card-foreground: #e5e5e5;
-  --popover: #1c1c1c;
-  --popover-foreground: #e5e5e5;
-  --primary: #00ff88;
-  --primary-foreground: #121212;
-  --secondary: #1c1c1c;
-  --secondary-foreground: #e5e5e5;
-  --muted: #2d2d2d;
-  --muted-foreground: #6b6b6b;
-  --accent: #00ff88;
-  --accent-foreground: #121212;
-  --destructive: #ff3e3e;
-  --destructive-foreground: #ffffff;
-  --border: #2d2d2d;
-  --input: #2d2d2d;
-  --ring: #00ff88;
-  --chart-1: #00ff88;
-  --chart-2: #00cc6a;
-  --chart-3: #009950;
-  --chart-4: #ff3e3e;
-  --chart-5: #ff6b6b;
-  --radius: 0.25rem;
-  --sidebar: #1c1c1c;
-  --sidebar-foreground: #e5e5e5;
-  --sidebar-primary: #00ff88;
-  --sidebar-primary-foreground: #121212;
-  --sidebar-accent: #2d2d2d;
-  --sidebar-accent-foreground: #e5e5e5;
-  --sidebar-border: #2d2d2d;
-  --sidebar-ring: #00ff88;
-  
-  /* Custom Vader Protocol Variables */
-  --vader-surface: #1c1c1c;
-  --vader-glow: #00ff88;
-  --vader-alert: #ff3e3e;
-  --vader-success: #00ff88;
-}
+/* Vader Protocol Theme - Dark Cinematic CRM - Electric Green (#00ff88) */
 
 @theme inline {
   --font-sans: 'Geist', 'Geist Fallback';
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --color-background: #121212;
+  --color-foreground: #e5e5e5;
+  --color-card: #1c1c1c;
+  --color-card-foreground: #e5e5e5;
+  --color-popover: #1c1c1c;
+  --color-popover-foreground: #e5e5e5;
+  --color-primary: #00ff88;
+  --color-primary-foreground: #121212;
+  --color-secondary: #1c1c1c;
+  --color-secondary-foreground: #e5e5e5;
+  --color-muted: #2d2d2d;
+  --color-muted-foreground: #6b6b6b;
+  --color-accent: #00ff88;
+  --color-accent-foreground: #121212;
+  --color-destructive: #ff3e3e;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #2d2d2d;
+  --color-input: #2d2d2d;
+  --color-ring: #00ff88;
+  --color-chart-1: #00ff88;
+  --color-chart-2: #00cc6a;
+  --color-chart-3: #009950;
+  --color-chart-4: #ff3e3e;
+  --color-chart-5: #ff6b6b;
+  --radius-sm: 0;
+  --radius-md: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --color-sidebar: #1c1c1c;
+  --color-sidebar-foreground: #e5e5e5;
+  --color-sidebar-primary: #00ff88;
+  --color-sidebar-primary-foreground: #121212;
+  --color-sidebar-accent: #2d2d2d;
+  --color-sidebar-accent-foreground: #e5e5e5;
+  --color-sidebar-border: #2d2d2d;
+  --color-sidebar-ring: #00ff88;
 }
 
 @layer base {
