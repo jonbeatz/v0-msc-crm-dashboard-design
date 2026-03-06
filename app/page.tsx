@@ -185,6 +185,8 @@ export default function CRMDashboard() {
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         onAddClient={handleAddClient}
+        projects={mockProjects}
+        selectedProjectId={selectedProjectId}
       />
 
       <CalendarModal

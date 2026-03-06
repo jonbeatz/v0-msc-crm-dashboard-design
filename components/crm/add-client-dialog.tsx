@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Hash, Link2, AlertTriangle, Film } from 'lucide-react'
+import { User, Link2, AlertTriangle, Film, Folder } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -13,31 +13,43 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import type { Client } from '@/lib/crm-data'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import type { Client, Project } from '@/lib/crm-data'
 
 interface AddClientDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onAddClient: (client: Client) => void
+  projects: Project[]
+  selectedProjectId: string
 }
 
 export function AddClientDialog({
   open,
   onOpenChange,
   onAddClient,
+  projects,
+  selectedProjectId,
 }: AddClientDialogProps) {
   const [name, setName] = useState('')
-  const [projectId, setProjectId] = useState('')
+  const [projectId, setProjectId] = useState(selectedProjectId !== 'all' ? selectedProjectId : '')
   const [wpLoginUrl, setWpLoginUrl] = useState('')
   const [highPriority, setHighPriority] = useState(false)
+
+  // Update project selection when the dialog opens with a different selected project
+  const activeProjects = projects.filter(p => p.status === 'active')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     
+    if (!projectId) {
+      return // Require a project selection
+    }
+
     const newClient: Client = {
       id: Date.now().toString(),
       name,
-      projectId: projectId || `msc_indie_${Date.now().toString().slice(-4)}`,
+      projectId,
       currentStep: 0,
       completedSteps: [false, false, false, false, false],
       consultingCall: false,
@@ -50,7 +62,7 @@ export function AddClientDialog({
 
     onAddClient(newClient)
     setName('')
-    setProjectId('')
+    setProjectId(selectedProjectId !== 'all' ? selectedProjectId : '')
     setWpLoginUrl('')
     setHighPriority(false)
     onOpenChange(false)
@@ -86,16 +98,21 @@ export function AddClientDialog({
 
           <div className="space-y-2">
             <Label htmlFor="projectId" className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Hash className="h-3.5 w-3.5" />
-              Project ID
+              <Folder className="h-3.5 w-3.5" />
+              Project
             </Label>
-            <Input
-              id="projectId"
-              value={projectId}
-              onChange={(e) => setProjectId(e.target.value)}
-              placeholder="msc_indie_XX (auto-generated)"
-              className="rounded-xl border-white/[0.06] bg-white/[0.03] font-mono text-sm placeholder:text-muted-foreground focus:border-primary/40 focus:bg-white/[0.05]"
-            />
+            <Select value={projectId} onValueChange={setProjectId}>
+              <SelectTrigger className="rounded-xl border-white/[0.06] bg-white/[0.03] text-sm focus:border-primary/40 focus:bg-white/[0.05]">
+                <SelectValue placeholder="Select a project..." />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl">
+                {activeProjects.map((project) => (
+                  <SelectItem key={project.id} value={project.id}>
+                    {project.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
