@@ -4,6 +4,7 @@ import { Search, Plus, Film, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Sparkline } from '@/components/crm/sparkline'
+import { GlobalStatusGauge } from '@/components/crm/global-status-gauge'
 
 interface HeaderProps {
   searchQuery: string
@@ -44,7 +45,12 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps)
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
+        {/* Global Status Gauge */}
+        <div className="hidden lg:block border-r border-border pr-6">
+          <GlobalStatusGauge percentage={85} label="Studio Capacity" />
+        </div>
+
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input

@@ -6,6 +6,8 @@ import { KanbanBoard } from '@/components/crm/kanban-board'
 import { ClientDrawer } from '@/components/crm/client-drawer'
 import { ActivityFeed } from '@/components/crm/activity-feed'
 import { AddClientDialog } from '@/components/crm/add-client-dialog'
+import { StudioOperations } from '@/components/crm/studio-operations'
+import { QuickCommandBar } from '@/components/crm/quick-command-bar'
 import { mockClients, mockActivities, type Client } from '@/lib/crm-data'
 
 export default function CRMDashboard() {
@@ -46,7 +48,7 @@ export default function CRMDashboard() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background pb-14">
       <Header
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -61,6 +63,12 @@ export default function CRMDashboard() {
         />
         <ActivityFeed activities={mockActivities} />
       </div>
+
+      {/* Studio Operations Section */}
+      <StudioOperations />
+
+      {/* Quick Command Bar */}
+      <QuickCommandBar />
 
       <ClientDrawer
         client={selectedClient}

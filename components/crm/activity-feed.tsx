@@ -1,6 +1,6 @@
 'use client'
 
-import { Activity, Clock, Film } from 'lucide-react'
+import { Activity, Clock } from 'lucide-react'
 import type { Activity as ActivityType } from '@/lib/crm-data'
 import { cn } from '@/lib/utils'
 
@@ -69,18 +69,6 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
         ))}
       </div>
 
-      {/* MSC Engine Badge */}
-      <div className="mt-3 pt-3 border-t border-border text-center">
-        <div className="flex items-center justify-center gap-1.5 mb-1">
-          <Film className="h-3 w-3 text-primary" />
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            Powered by
-          </span>
-        </div>
-        <p className="font-mono text-xs font-bold tracking-wider text-primary vader-glow-text">
-          MSC Media Engine
-        </p>
-      </div>
-    </aside>
+      </aside>
   )
 }
