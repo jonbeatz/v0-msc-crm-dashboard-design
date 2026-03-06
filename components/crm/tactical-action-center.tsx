@@ -88,7 +88,7 @@ export function TacticalActionCenter({
 
   return (
     <>
-      <section className="glass-card border-t border-white/[0.06] mx-6 mb-6 rounded-2xl overflow-hidden">
+      <section className="glass-card border-t border-white/[0.06] rounded-2xl overflow-hidden h-fit">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
           <div className="flex items-center gap-3">

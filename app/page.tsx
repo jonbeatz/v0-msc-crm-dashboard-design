@@ -11,6 +11,7 @@ import { StudioOperations } from '@/components/crm/studio-operations'
 import { QuickCommandBar } from '@/components/crm/quick-command-bar'
 import { StatusBar } from '@/components/crm/status-bar'
 import { TacticalActionCenter } from '@/components/crm/tactical-action-center'
+import { ScheduleCalendar } from '@/components/crm/schedule-calendar'
 import { mockClients, mockActivities, mockTasks, type Client, type Task } from '@/lib/crm-data'
 
 export default function CRMDashboard() {
@@ -115,13 +116,19 @@ export default function CRMDashboard() {
           {/* Slide-out Activity Feed */}
           <ActivityFeed activities={mockActivities} />
 
-          {/* Tactical Action Center (To-Do HUD) */}
-          <TacticalActionCenter
-            tasks={tasks}
-            selectedStepFilter={stepFilter}
-            onToggleTask={handleToggleTask}
-            onAddTask={handleAddTask}
-          />
+          {/* Tactical Action Center & Calendar Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mx-6 mb-6">
+            <TacticalActionCenter
+              tasks={tasks}
+              selectedStepFilter={stepFilter}
+              onToggleTask={handleToggleTask}
+              onAddTask={handleAddTask}
+            />
+            <ScheduleCalendar
+              tasks={tasks}
+              clients={clients}
+            />
+          </div>
 
           {/* Studio Operations Section */}
           <StudioOperations />
