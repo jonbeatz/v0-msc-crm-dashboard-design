@@ -164,6 +164,7 @@ export default function CRMDashboard() {
             dueAt: event.dueAt,
             assignedToMe: true,
             completed: false,
+            description: event.description,
           }
           setTasks((prev) => [...prev, newTask])
         }}

@@ -5,6 +5,7 @@ import { X, CalendarDays, ChevronLeft, ChevronRight, Clock, User, AlertTriangle,
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { TASK_STEPS, type Task, type Client } from '@/lib/crm-data'
@@ -16,7 +17,7 @@ interface CalendarModalProps {
   onOpenChange: (open: boolean) => void
   tasks: Task[]
   clients: Client[]
-  onAddEvent?: (event: { name: string; clientId: string; clientName: string; stepIndex: number; dueAt: Date }) => void
+  onAddEvent?: (event: { name: string; clientId: string; clientName: string; stepIndex: number; dueAt: Date; description?: string }) => void
 }
 
 interface CalendarEvent {
@@ -40,6 +41,7 @@ export function CalendarModal({ open, onOpenChange, tasks, clients, onAddEvent }
   const [newEventClientId, setNewEventClientId] = useState('')
   const [newEventStep, setNewEventStep] = useState(0)
   const [newEventTime, setNewEventTime] = useState('12:00')
+  const [newEventDescription, setNewEventDescription] = useState('')
 
   // Generate calendar events from tasks and client deadlines
   const calendarEvents = useMemo(() => {
@@ -182,6 +184,7 @@ export function CalendarModal({ open, onOpenChange, tasks, clients, onAddEvent }
       clientName: client?.name || 'Unassigned',
       stepIndex: newEventStep,
       dueAt,
+      description: newEventDescription.trim() || undefined,
     })
 
     // Reset form
@@ -189,6 +192,7 @@ export function CalendarModal({ open, onOpenChange, tasks, clients, onAddEvent }
     setNewEventClientId('')
     setNewEventStep(0)
     setNewEventTime('12:00')
+    setNewEventDescription('')
     setShowAddForm(false)
   }
 
@@ -675,6 +679,19 @@ export function CalendarModal({ open, onOpenChange, tasks, clients, onAddEvent }
                     className="rounded-xl border-white/[0.08] bg-white/[0.03] focus:border-primary/40"
                   />
                 </div>
+              </div>
+
+              {/* Notes / Instructions */}
+              <div className="space-y-2 mt-4">
+                <Label htmlFor="eventDescription" className="text-sm text-muted-foreground">Notes / Instructions</Label>
+                <Textarea
+                  id="eventDescription"
+                  value={newEventDescription}
+                  onChange={(e) => setNewEventDescription(e.target.value)}
+                  placeholder="Add any additional notes or instructions for this event..."
+                  rows={3}
+                  className="rounded-xl border-white/[0.08] bg-white/[0.03] focus:border-primary/40 resize-none"
+                />
               </div>
 
               <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/[0.06]">

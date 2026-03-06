@@ -29,6 +29,7 @@ export interface Task {
   dueAt: Date
   assignedToMe: boolean
   completed: boolean
+  description?: string
 }
 
 export const PIPELINE_STAGES = [
