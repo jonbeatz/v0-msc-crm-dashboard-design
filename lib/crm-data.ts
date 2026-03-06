@@ -60,7 +60,7 @@ export const mockClients: Client[] = [
   {
     id: '1',
     name: 'Antwuan Smith',
-    projectId: 'msc_indie_01',
+    projectId: 'proj_1',
     currentStep: 3,
     completedSteps: [true, true, true, false, false],
     consultingCall: true,
@@ -73,7 +73,7 @@ export const mockClients: Client[] = [
   {
     id: '2',
     name: 'Marcus Johnson',
-    projectId: 'msc_indie_02',
+    projectId: 'proj_1',
     currentStep: 1,
     completedSteps: [true, false, false, false, false],
     consultingCall: true,
@@ -86,7 +86,7 @@ export const mockClients: Client[] = [
   {
     id: '3',
     name: 'Keisha Williams',
-    projectId: 'msc_indie_03',
+    projectId: 'proj_1',
     currentStep: 4,
     completedSteps: [true, true, true, true, false],
     consultingCall: true,
@@ -99,7 +99,7 @@ export const mockClients: Client[] = [
   {
     id: '4',
     name: 'Devon Carter',
-    projectId: 'msc_indie_04',
+    projectId: 'proj_2',
     currentStep: 0,
     completedSteps: [false, false, false, false, false],
     consultingCall: false,
@@ -112,7 +112,7 @@ export const mockClients: Client[] = [
   {
     id: '5',
     name: 'Jasmine Lee',
-    projectId: 'msc_indie_05',
+    projectId: 'proj_2',
     currentStep: 5,
     completedSteps: [true, true, true, true, true],
     consultingCall: true,
@@ -125,7 +125,7 @@ export const mockClients: Client[] = [
   {
     id: '6',
     name: 'Tyrone Mitchell',
-    projectId: 'msc_indie_06',
+    projectId: 'proj_3',
     currentStep: 2,
     completedSteps: [true, true, false, false, false],
     consultingCall: true,

@@ -28,15 +28,25 @@ export default function CRMDashboard() {
   const [selectedProjectId, setSelectedProjectId] = useState(mockProjects[0]?.id || '')
 
   const filteredClients = useMemo(() => {
-    if (!searchQuery.trim()) return clients
+    let filtered = clients
     
-    const query = searchQuery.toLowerCase()
-    return clients.filter(
-      (client) =>
-        client.name.toLowerCase().includes(query) ||
-        client.projectId.toLowerCase().includes(query)
-    )
-  }, [clients, searchQuery])
+    // Filter by selected project
+    if (selectedProjectId) {
+      filtered = filtered.filter(client => client.projectId === selectedProjectId)
+    }
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter(
+        (client) =>
+          client.name.toLowerCase().includes(query) ||
+          client.projectId.toLowerCase().includes(query)
+      )
+    }
+    
+    return filtered
+  }, [clients, searchQuery, selectedProjectId])
 
   const handleClientSelect = (client: Client) => {
     setSelectedClient(client)
