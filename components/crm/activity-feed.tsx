@@ -112,13 +112,14 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
         </div>
       </aside>
 
-      {/* Overlay when open on mobile */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-20 lg:hidden"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+      {/* Backdrop overlay when sidebar is open */}
+      <div 
+        className={cn(
+          "fixed inset-0 bg-black/50 z-20 transition-opacity duration-300",
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => setIsOpen(false)}
+      />
     </>
   )
 }
