@@ -52,7 +52,13 @@
   }
   body {
     @apply bg-background text-foreground;
-    background: radial-gradient(ellipse at 50% 0%, #1a1a1a 0%, #121212 50%, #0d0d0d 100%);
+    background: 
+      /* Very faint grid texture */
+      linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+      /* Base radial gradient */
+      radial-gradient(ellipse at 50% 0%, #1a1a1a 0%, #121212 50%, #0d0d0d 100%);
+    background-size: 60px 60px, 60px 60px, 100% 100%;
     min-height: 100vh;
   }
 }
