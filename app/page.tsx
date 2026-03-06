@@ -8,7 +8,7 @@ import { ActivityFeed } from '@/components/crm/activity-feed'
 import { AddClientDialog } from '@/components/crm/add-client-dialog'
 import { StudioOperations } from '@/components/crm/studio-operations'
 import { QuickCommandBar } from '@/components/crm/quick-command-bar'
-import { SystemLog } from '@/components/crm/system-log'
+import { StatusBar } from '@/components/crm/status-bar'
 import { TacticalActionCenter } from '@/components/crm/tactical-action-center'
 import { mockClients, mockActivities, mockTasks, type Client, type Task } from '@/lib/crm-data'
 
@@ -82,8 +82,13 @@ export default function CRMDashboard() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background pb-14">
-      {/* System Log Strip */}
-      <SystemLog />
+      {/* Status Bar */}
+      <StatusBar 
+        totalProjects={clients.length}
+        activeProjects={clients.filter(c => c.currentStage !== 'launch').length}
+        completedToday={2}
+        overdueCount={tasks.filter(t => !t.completed && t.dueAt < new Date()).length}
+      />
 
       <Header
         searchQuery={searchQuery}
