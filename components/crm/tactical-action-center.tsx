@@ -12,6 +12,7 @@ interface TacticalActionCenterProps {
   selectedStepFilter: { clientId: string; stepIndex: number } | null
   onToggleTask: (taskId: string) => void
   onAddTask: (taskName: string) => void
+  onViewClient?: (clientId: string) => void
 }
 
 export function TacticalActionCenter({
@@ -19,6 +20,7 @@ export function TacticalActionCenter({
   selectedStepFilter,
   onToggleTask,
   onAddTask,
+  onViewClient,
 }: TacticalActionCenterProps) {
   const [newTaskInput, setNewTaskInput] = useState('')
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
@@ -88,7 +90,7 @@ export function TacticalActionCenter({
 
   return (
     <>
-      <section className="glass-card border-t border-white/[0.06] mx-6 mb-6 rounded-2xl overflow-hidden">
+      <section className="glass-card border-t border-white/[0.06] mx-4 md:mx-6 mb-6 rounded-2xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
           <div className="flex items-center gap-3">
@@ -356,6 +358,13 @@ export function TacticalActionCenter({
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => {
+                      if (selectedTask.clientId && onViewClient) {
+                        onViewClient(selectedTask.clientId)
+                        handleCloseModal()
+                      }
+                    }}
+                    disabled={!selectedTask.clientId || !onViewClient}
                     className="rounded-xl border-white/[0.08] hover:bg-white/[0.04]"
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />

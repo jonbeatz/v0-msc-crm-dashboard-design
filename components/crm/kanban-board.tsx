@@ -18,15 +18,15 @@ export function KanbanBoard({ clients, onClientSelect, recentlyUpdatedId, onStep
   }
 
   return (
-    <div className="flex-1 overflow-x-auto p-6">
-      <div className="flex gap-5 min-w-max">
+    <div className="flex-1 overflow-x-auto p-4 md:p-6">
+      <div className="flex gap-4 md:gap-5 min-w-max">
         {PIPELINE_STAGES.map((stage, index) => {
           const stageClients = getClientsForStage(index)
           
           return (
             <div
               key={stage}
-              className="w-72 flex-shrink-0 rounded-2xl glass-card overflow-hidden"
+              className="w-64 md:w-72 flex-shrink-0 rounded-2xl glass-card overflow-hidden"
             >
               {/* Column Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">

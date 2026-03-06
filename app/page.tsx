@@ -136,10 +136,7 @@ export default function CRMDashboard() {
           // Scroll to or highlight overdue tasks
           setCalendarOpen(true)
         }}
-        onOpenProjects={() => {
-          // The projects dropdown is in the header, this could open a projects modal
-          // For now, we'll just log
-        }}
+        onOpenProjects={() => setAddProjectDialogOpen(true)}
       />
 
       <Header
@@ -176,13 +173,24 @@ export default function CRMDashboard() {
             selectedStepFilter={stepFilter}
             onToggleTask={handleToggleTask}
             onAddTask={handleAddTask}
+            onViewClient={(clientId) => {
+              const client = clients.find(c => c.id === clientId)
+              if (client) {
+                handleClientSelect(client)
+              }
+            }}
           />
 
           {/* Studio Operations Section */}
           <StudioOperations />
 
           {/* Quick Command Bar */}
-          <QuickCommandBar />
+          <QuickCommandBar 
+            onSearch={setSearchQuery}
+            onAddClient={() => setAddDialogOpen(true)}
+            onOpenCalendar={() => setCalendarOpen(true)}
+            onSwitchView={setViewMode}
+          />
         </>
       ) : (
         <ExecutiveSummary clients={projectFilteredClients} tasks={projectFilteredTasks} />

@@ -28,9 +28,9 @@ const supportTickets = [
 
 export function StudioOperations() {
   return (
-    <section className="mx-6 mb-6">
-      {/* Three Column Layout */}
-      <div className="grid grid-cols-3 gap-5">
+    <section className="mx-4 md:mx-6 mb-6">
+      {/* Responsive Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {/* Column 1: Pulse Feed */}
         <div className="glass-card rounded-2xl overflow-hidden">
           <div className="flex items-center gap-3 px-5 py-4 border-b border-white/[0.06]">

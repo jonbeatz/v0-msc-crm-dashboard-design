@@ -204,25 +204,25 @@ export const mockProjects: Project[] = [
   {
     id: 'proj_1',
     name: 'MSC Indie Artists',
-    clientCount: 6,
+    clientCount: 3, // Antwuan, Marcus, Keisha
     status: 'active',
   },
   {
     id: 'proj_2',
     name: 'Label Services',
-    clientCount: 12,
+    clientCount: 2, // Devon, Jasmine
     status: 'active',
   },
   {
     id: 'proj_3',
     name: 'Distribution Partners',
-    clientCount: 4,
+    clientCount: 1, // Tyrone
     status: 'active',
   },
   {
     id: 'proj_4',
     name: 'Legacy Clients',
-    clientCount: 23,
+    clientCount: 0,
     status: 'archived',
   },
 ]

@@ -2,18 +2,24 @@
 
 import { TrendingUp, TrendingDown, Users, FolderOpen, CheckCircle, AlertTriangle, Clock, DollarSign } from 'lucide-react'
 import { CircularProgress } from '@/components/crm/circular-progress'
-import type { Client, Task } from '@/lib/crm-data'
+import { PIPELINE_STAGES, type Client, type Task } from '@/lib/crm-data'
 
 interface ExecutiveSummaryProps {
   clients: Client[]
   tasks: Task[]
 }
 
+// Helper to get stage name from step index
+function getStageName(stepIndex: number): string {
+  const stages = ['prep', 'domain', 'hosting', 'collab', 'theme', 'launch']
+  return stages[stepIndex] || 'prep'
+}
+
 export function ExecutiveSummary({ clients, tasks }: ExecutiveSummaryProps) {
   // Calculate metrics
   const totalClients = clients.length
-  const activeProjects = clients.filter(c => c.currentStage !== 'launch').length
-  const completedProjects = clients.filter(c => c.currentStage === 'launch').length
+  const activeProjects = clients.filter(c => c.currentStep < 5).length
+  const completedProjects = clients.filter(c => c.currentStep >= 5).length
   const highPriority = clients.filter(c => c.priority === 'high').length
   
   const totalTasks = tasks.length
@@ -32,19 +38,19 @@ export function ExecutiveSummary({ clients, tasks }: ExecutiveSummaryProps) {
       }, 0) / clients.length)
     : 0
 
-  // Stage distribution
+  // Stage distribution based on currentStep index
   const stageDistribution = {
-    prep: clients.filter(c => c.currentStage === 'prep').length,
-    domain: clients.filter(c => c.currentStage === 'domain').length,
-    hosting: clients.filter(c => c.currentStage === 'hosting').length,
-    collab: clients.filter(c => c.currentStage === 'collab').length,
-    theme: clients.filter(c => c.currentStage === 'theme').length,
-    launch: clients.filter(c => c.currentStage === 'launch').length,
+    prep: clients.filter(c => c.currentStep === 0).length,
+    domain: clients.filter(c => c.currentStep === 1).length,
+    hosting: clients.filter(c => c.currentStep === 2).length,
+    collab: clients.filter(c => c.currentStep === 3).length,
+    theme: clients.filter(c => c.currentStep === 4).length,
+    launch: clients.filter(c => c.currentStep === 5).length,
   }
 
   return (
-    <div className="flex-1 overflow-auto p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="flex-1 overflow-auto p-4 md:p-8">
+      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -58,7 +64,7 @@ export function ExecutiveSummary({ clients, tasks }: ExecutiveSummaryProps) {
         </div>
 
         {/* Key Metrics Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           <MetricCard 
             icon={Users}
             label="Total Clients"
@@ -90,7 +96,7 @@ export function ExecutiveSummary({ clients, tasks }: ExecutiveSummaryProps) {
         </div>
 
         {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {/* Project Health */}
           <div className="glass-card rounded-2xl p-6 border border-white/[0.06]">
             <h3 className="text-sm font-semibold text-foreground mb-6">Project Health</h3>
@@ -168,7 +174,7 @@ export function ExecutiveSummary({ clients, tasks }: ExecutiveSummaryProps) {
             {/* Recent Completions */}
             <div className="mt-6 pt-6 border-t border-white/[0.06]">
               <h4 className="text-xs font-medium text-muted-foreground mb-3">Recent Launches</h4>
-              {clients.filter(c => c.currentStage === 'launch').slice(0, 3).map(client => (
+              {clients.filter(c => c.currentStep >= 5).slice(0, 3).map(client => (
                 <div key={client.id} className="flex items-center gap-3 py-2">
                   <div className="h-2 w-2 rounded-full bg-primary" />
                   <span className="text-sm text-foreground">{client.name}</span>
@@ -204,7 +210,7 @@ export function ExecutiveSummary({ clients, tasks }: ExecutiveSummaryProps) {
                         <span className="text-sm font-medium text-foreground">{client.name}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="text-xs font-medium text-muted-foreground uppercase">{client.currentStage}</span>
+                        <span className="text-xs font-medium text-muted-foreground uppercase">{getStageName(client.currentStep)}</span>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
