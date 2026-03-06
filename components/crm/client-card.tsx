@@ -3,7 +3,7 @@
 import { AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CircularProgress } from '@/components/crm/circular-progress'
-import { TASK_STEPS, type Client } from '@/lib/crm-data'
+import type { Client } from '@/lib/crm-data'
 
 interface ClientCardProps {
   client: Client
@@ -26,8 +26,6 @@ export function ClientCard({ client, onClick, isRecentlyUpdated, onStepClick, ac
   const completedCount = client.completedSteps.filter(Boolean).length
   const percentage = Math.round((completedCount / 5) * 100)
   const hasOverdueStep = client.priority === 'high' && completedCount < 5
-  const nextStepIndex = client.completedSteps.findIndex((step) => !step)
-  const nextStepName = nextStepIndex !== -1 ? `Step ${nextStepIndex + 1}: ${TASK_STEPS[nextStepIndex]}` : 'All Complete'
 
   return (
     <button
@@ -85,8 +83,8 @@ export function ClientCard({ client, onClick, isRecentlyUpdated, onStepClick, ac
           </div>
         </div>
 
-        {/* Circular Progress Gauge with Tooltip */}
-        <CircularProgress percentage={percentage} size={48} strokeWidth={5} nextStepName={nextStepName} />
+        {/* Circular Progress Gauge */}
+        <CircularProgress percentage={percentage} size={48} strokeWidth={5} />
       </div>
 
       {/* Step Indicator Row - Rounded Pills */}

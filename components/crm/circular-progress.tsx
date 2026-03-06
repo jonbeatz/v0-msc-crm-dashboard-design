@@ -5,7 +5,6 @@ interface CircularProgressProps {
   size?: number
   strokeWidth?: number
   showLabel?: boolean
-  nextStepName?: string
 }
 
 export function CircularProgress({
@@ -13,21 +12,13 @@ export function CircularProgress({
   size = 52,
   strokeWidth = 6,
   showLabel = true,
-  nextStepName,
 }: CircularProgressProps) {
   const radius = (size - strokeWidth) / 2
   const circumference = radius * 2 * Math.PI
   const offset = circumference - (percentage / 100) * circumference
 
   return (
-    <div className="relative progress-container" style={{ width: size, height: size }}>
-      {/* Tooltip */}
-      {nextStepName && (
-        <div className="progress-tooltip">
-          <span className="text-primary font-medium">Next:</span>{' '}
-          <span className="text-foreground">{nextStepName}</span>
-        </div>
-      )}
+    <div className="relative" style={{ width: size, height: size }}>
       <svg
         className="transform -rotate-90"
         width={size}

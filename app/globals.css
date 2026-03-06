@@ -52,25 +52,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    background: 
-      /* Subtle vertical scanlines */
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 100px,
-        rgba(255, 255, 255, 0.008) 100px,
-        rgba(255, 255, 255, 0.008) 101px
-      ),
-      /* Subtle horizontal scanlines */
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 100px,
-        rgba(255, 255, 255, 0.008) 100px,
-        rgba(255, 255, 255, 0.008) 101px
-      ),
-      /* Base radial gradient */
-      radial-gradient(ellipse at 50% 0%, #1a1a1a 0%, #121212 50%, #0d0d0d 100%);
+    background: radial-gradient(ellipse at 50% 0%, #1a1a1a 0%, #121212 50%, #0d0d0d 100%);
     min-height: 100vh;
   }
 }
@@ -266,39 +248,4 @@
   font-family: 'Geist Mono', monospace;
   letter-spacing: 0.05em;
   color: rgba(136, 136, 136, 0.9);
-}
-
-/* Custom Tooltip */
-.progress-tooltip {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-8px);
-  padding: 8px 12px;
-  background: rgba(20, 20, 20, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  font-size: 11px;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.2s ease;
-  z-index: 50;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-.progress-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: rgba(20, 20, 20, 0.95);
-}
-
-.progress-container:hover .progress-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(-4px);
 }
