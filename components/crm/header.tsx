@@ -39,110 +39,104 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onVi
   const archivedProjects = projects.filter(p => p.status === 'archived')
 
   return (
-    <header className="flex items-center justify-between glass-card border-b border-white/[0.06] px-8 py-5">
-      <div className="flex items-center gap-8">
-        <div className="flex items-center gap-4">
-          {/* Soft MSC Icon */}
-          <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20">
-            <Film className="h-5 w-5 text-primary" />
-            <div className="absolute inset-0 rounded-2xl blur-xl bg-primary/20" />
+    <header className="flex items-center justify-between glass-card border-b border-white/[0.06] px-4 md:px-6 lg:px-8 py-4">
+      <div className="flex items-center gap-4 lg:gap-6">
+        {/* MSC Logo - compact on mobile */}
+        <div className="flex items-center gap-3">
+          <div className="relative flex h-9 w-9 lg:h-11 lg:w-11 items-center justify-center rounded-xl lg:rounded-2xl bg-primary/10 border border-primary/20">
+            <Film className="h-4 w-4 lg:h-5 lg:w-5 text-primary" />
+            <div className="absolute inset-0 rounded-xl lg:rounded-2xl blur-xl bg-primary/20" />
           </div>
-          <div>
-            <h1 className="text-lg font-semibold tracking-wide text-foreground">
+          <div className="hidden sm:block">
+            <h1 className="text-base lg:text-lg font-semibold tracking-wide text-foreground">
               <span className="text-primary">MSC</span>
-              <span className="text-muted-foreground mx-2">/</span>
+              <span className="text-muted-foreground mx-1.5">/</span>
               <span className="text-muted-foreground">Studio</span>
             </h1>
-            <p className="text-xs text-muted-foreground">Media Dashboard</p>
           </div>
         </div>
 
         {/* Project Selector Dropdown */}
-        <div className="border-l border-white/[0.06] pl-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="flex items-center gap-3 rounded-xl px-4 py-2.5 bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.06] hover:border-primary/30 transition-all"
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded-xl px-3 py-2 bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.06] hover:border-primary/30 transition-all"
+            >
+              <Folder className="h-4 w-4 text-primary flex-shrink-0" />
+              <span className="text-sm font-medium text-foreground truncate max-w-[120px] lg:max-w-[160px]">
+                {selectedProject?.name || 'Select Project'}
+              </span>
+              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-64 rounded-xl bg-background/95 backdrop-blur-xl border-white/[0.08]">
+            <DropdownMenuLabel className="text-xs text-muted-foreground">Active Projects</DropdownMenuLabel>
+            {activeProjects.map((project) => (
+              <DropdownMenuItem
+                key={project.id}
+                onClick={() => onProjectChange(project.id)}
+                className="flex items-center justify-between rounded-lg cursor-pointer"
               >
-                <Folder className="h-4 w-4 text-primary" />
-                <div className="text-left">
-                  <p className="text-sm font-medium text-foreground">{selectedProject?.name || 'Select Project'}</p>
-                  <p className="text-[10px] text-muted-foreground">{selectedProject?.clientCount || 0} clients</p>
-                </div>
-                <ChevronDown className="h-4 w-4 text-muted-foreground ml-2" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-64 rounded-xl bg-background/95 backdrop-blur-xl border-white/[0.08]">
-              <DropdownMenuLabel className="text-xs text-muted-foreground">Active Projects</DropdownMenuLabel>
-              {activeProjects.map((project) => (
-                <DropdownMenuItem
-                  key={project.id}
-                  onClick={() => onProjectChange(project.id)}
-                  className="flex items-center justify-between rounded-lg cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    <Folder className="h-4 w-4 text-primary/70" />
-                    <div>
-                      <p className="text-sm font-medium">{project.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{project.clientCount} clients</p>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <Folder className="h-4 w-4 text-primary/70" />
+                  <div>
+                    <p className="text-sm font-medium">{project.name}</p>
+                    <p className="text-[10px] text-muted-foreground">{project.clientCount} clients</p>
                   </div>
-                  {project.id === selectedProjectId && (
-                    <Check className="h-4 w-4 text-primary" />
-                  )}
-                </DropdownMenuItem>
-              ))}
-              {archivedProjects.length > 0 && (
-                <>
-                  <DropdownMenuSeparator className="bg-white/[0.06]" />
-                  <DropdownMenuLabel className="text-xs text-muted-foreground">Archived</DropdownMenuLabel>
-                  {archivedProjects.map((project) => (
-                    <DropdownMenuItem
-                      key={project.id}
-                      onClick={() => onProjectChange(project.id)}
-                      className="flex items-center justify-between rounded-lg cursor-pointer opacity-60"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Archive className="h-4 w-4 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm font-medium">{project.name}</p>
-                          <p className="text-[10px] text-muted-foreground">{project.clientCount} clients</p>
-                        </div>
+                </div>
+                {project.id === selectedProjectId && (
+                  <Check className="h-4 w-4 text-primary" />
+                )}
+              </DropdownMenuItem>
+            ))}
+            {archivedProjects.length > 0 && (
+              <>
+                <DropdownMenuSeparator className="bg-white/[0.06]" />
+                <DropdownMenuLabel className="text-xs text-muted-foreground">Archived</DropdownMenuLabel>
+                {archivedProjects.map((project) => (
+                  <DropdownMenuItem
+                    key={project.id}
+                    onClick={() => onProjectChange(project.id)}
+                    className="flex items-center justify-between rounded-lg cursor-pointer opacity-60"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Archive className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">{project.name}</p>
+                        <p className="text-[10px] text-muted-foreground">{project.clientCount} clients</p>
                       </div>
-                      {project.id === selectedProjectId && (
-                        <Check className="h-4 w-4 text-primary" />
-                      )}
-                    </DropdownMenuItem>
-                  ))}
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+                    </div>
+                    {project.id === selectedProjectId && (
+                      <Check className="h-4 w-4 text-primary" />
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-        {/* Project Velocity Sparkline */}
-        <div className="hidden md:flex items-center gap-4 border-l border-white/[0.06] pl-8">
+        {/* Project Velocity Sparkline - hidden on smaller screens */}
+        <div className="hidden xl:flex items-center gap-3 border-l border-white/[0.06] pl-6">
           <div className="flex items-center gap-2">
             <Activity className="h-4 w-4 text-primary" />
-            <span className="text-xs text-muted-foreground">
-              Velocity
-            </span>
+            <span className="text-xs text-muted-foreground">Velocity</span>
           </div>
-          <Sparkline data={velocityData} width={100} height={28} />
+          <Sparkline data={velocityData} width={80} height={24} />
           <span className="text-sm text-primary font-semibold">+12%</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2 lg:gap-4">
         {/* View Mode Toggle */}
-        <div className="hidden md:flex items-center border-r border-white/[0.06] pr-6">
+        <div className="hidden md:flex items-center">
           <div className="flex items-center rounded-xl bg-muted/40 p-1">
             <button
               type="button"
               onClick={() => onViewModeChange('technical')}
               className={cn(
-                'flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200',
+                'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200',
                 viewMode === 'technical'
                   ? 'bg-primary/20 text-primary shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -155,7 +149,7 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onVi
               type="button"
               onClick={() => onViewModeChange('executive')}
               className={cn(
-                'flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200',
+                'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200',
                 viewMode === 'executive'
                   ? 'bg-primary/20 text-primary shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -167,36 +161,40 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onVi
           </div>
         </div>
 
-        {/* Global Status Gauge */}
-        <div className="hidden lg:flex items-center gap-4 border-r border-white/[0.06] pr-6">
-          <GlobalStatusGauge percentage={85} label="Studio Capacity" />
+        {/* Global Status Gauge - only on large screens */}
+        <div className="hidden xl:flex items-center">
+          <GlobalStatusGauge percentage={85} label="Capacity" />
         </div>
 
         {/* Calendar Button */}
         <Button
           onClick={onOpenCalendar}
           variant="outline"
-          className="rounded-xl border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] hover:border-primary/40 px-3 py-2.5"
+          size="icon"
+          className="rounded-xl border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] hover:border-primary/40 h-9 w-9"
         >
           <CalendarDays className="h-4 w-4 text-primary" />
         </Button>
 
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        {/* Search - responsive width */}
+        <div className="relative hidden sm:block">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search clients..."
+            placeholder="Search..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-72 rounded-xl border-white/[0.06] bg-white/[0.03] pl-11 text-sm placeholder:text-muted-foreground focus:border-primary/40 focus:ring-primary/20 focus:bg-white/[0.05]"
+            className="w-32 lg:w-48 xl:w-64 rounded-xl border-white/[0.06] bg-white/[0.03] pl-9 text-sm placeholder:text-muted-foreground focus:border-primary/40 focus:ring-primary/20 focus:bg-white/[0.05] h-9"
           />
         </div>
+
+        {/* Add Client Button */}
         <Button
           onClick={onQuickAdd}
-          className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 vader-btn-hover px-5 py-2.5 text-sm font-semibold"
+          className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 vader-btn-hover px-3 lg:px-4 py-2 text-sm font-semibold h-9"
         >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Client
+          <Plus className="h-4 w-4 lg:mr-2" />
+          <span className="hidden lg:inline">Add Client</span>
         </Button>
       </div>
     </header>

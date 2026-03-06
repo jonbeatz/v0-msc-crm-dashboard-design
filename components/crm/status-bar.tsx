@@ -1,20 +1,28 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Circle, CheckCircle2, Clock, AlertTriangle } from 'lucide-react'
+import { Circle, CheckCircle2, AlertTriangle, Folder } from 'lucide-react'
 
 interface StatusBarProps {
   totalProjects: number
   activeProjects: number
   completedToday: number
   overdueCount: number
+  onFilterActive?: () => void
+  onFilterCompleted?: () => void
+  onFilterOverdue?: () => void
+  onOpenProjects?: () => void
 }
 
 export function StatusBar({ 
   totalProjects, 
   activeProjects, 
   completedToday,
-  overdueCount 
+  overdueCount,
+  onFilterActive,
+  onFilterCompleted,
+  onFilterOverdue,
+  onOpenProjects,
 }: StatusBarProps) {
   const [timeString, setTimeString] = useState<string>('')
   const [dateString, setDateString] = useState<string>('')
@@ -54,40 +62,50 @@ export function StatusBar({
         </div>
 
         {/* Right: Quick Stats */}
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <div className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10">
-              <Circle className="h-2.5 w-2.5 text-primary" />
-            </div>
-            <span className="text-xs text-muted-foreground">Active</span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onFilterActive}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-white/[0.04] transition-colors"
+          >
+            <Circle className="h-2 w-2 fill-primary text-primary" />
+            <span className="text-xs text-muted-foreground hidden sm:inline">Active</span>
             <span className="text-xs font-semibold text-foreground">{activeProjects}</span>
-          </div>
+          </button>
 
-          <div className="flex items-center gap-2">
-            <div className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10">
-              <CheckCircle2 className="h-2.5 w-2.5 text-primary" />
-            </div>
-            <span className="text-xs text-muted-foreground">Done Today</span>
+          <button
+            type="button"
+            onClick={onFilterCompleted}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-white/[0.04] transition-colors"
+          >
+            <CheckCircle2 className="h-3 w-3 text-primary" />
+            <span className="text-xs text-muted-foreground hidden sm:inline">Done Today</span>
             <span className="text-xs font-semibold text-foreground">{completedToday}</span>
-          </div>
+          </button>
 
           {overdueCount > 0 && (
-            <div className="flex items-center gap-2">
-              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-destructive/10">
-                <AlertTriangle className="h-2.5 w-2.5 text-destructive" />
-              </div>
-              <span className="text-xs text-muted-foreground">Overdue</span>
+            <button
+              type="button"
+              onClick={onFilterOverdue}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-white/[0.04] transition-colors"
+            >
+              <AlertTriangle className="h-3 w-3 text-destructive" />
+              <span className="text-xs text-muted-foreground hidden sm:inline">Overdue</span>
               <span className="text-xs font-semibold text-destructive">{overdueCount}</span>
-            </div>
+            </button>
           )}
 
-          <div className="h-4 w-px bg-white/[0.08]" />
+          <div className="h-4 w-px bg-white/[0.08] mx-1" />
           
-          <div className="flex items-center gap-2">
-            <Clock className="h-3 w-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">Projects</span>
+          <button
+            type="button"
+            onClick={onOpenProjects}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-white/[0.04] transition-colors"
+          >
+            <Folder className="h-3 w-3 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground hidden sm:inline">Projects</span>
             <span className="text-xs font-semibold text-foreground">{totalProjects}</span>
-          </div>
+          </button>
         </div>
       </div>
     </div>

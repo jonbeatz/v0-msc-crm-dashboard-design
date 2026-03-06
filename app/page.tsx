@@ -89,10 +89,22 @@ export default function CRMDashboard() {
     <div className="flex min-h-screen flex-col bg-background">
       {/* Status Bar */}
       <StatusBar 
-        totalProjects={clients.length}
+        totalProjects={mockProjects.length}
         activeProjects={clients.filter(c => c.currentStage !== 'launch').length}
-        completedToday={2}
+        completedToday={tasks.filter(t => t.completed).length}
         overdueCount={tasks.filter(t => !t.completed && t.dueAt < new Date()).length}
+        onFilterActive={() => setSearchQuery('')}
+        onFilterCompleted={() => {
+          // Could filter to show only completed, for now just focus on tasks
+        }}
+        onFilterOverdue={() => {
+          // Scroll to or highlight overdue tasks
+          setCalendarOpen(true)
+        }}
+        onOpenProjects={() => {
+          // The projects dropdown is in the header, this could open a projects modal
+          // For now, we'll just log
+        }}
       />
 
       <Header
