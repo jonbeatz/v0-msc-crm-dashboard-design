@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Circle, CheckCircle2, Clock, AlertTriangle } from 'lucide-react'
 
 interface StatusBarProps {
@@ -15,17 +16,28 @@ export function StatusBar({
   completedToday,
   overdueCount 
 }: StatusBarProps) {
-  const now = new Date()
-  const timeString = now.toLocaleTimeString('en-US', { 
-    hour: '2-digit', 
-    minute: '2-digit',
-    hour12: true 
-  })
-  const dateString = now.toLocaleDateString('en-US', { 
-    weekday: 'short',
-    month: 'short', 
-    day: 'numeric' 
-  })
+  const [timeString, setTimeString] = useState<string>('')
+  const [dateString, setDateString] = useState<string>('')
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date()
+      setTimeString(now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      }))
+      setDateString(now.toLocaleDateString('en-US', { 
+        weekday: 'short',
+        month: 'short', 
+        day: 'numeric' 
+      }))
+    }
+
+    updateTime()
+    const interval = setInterval(updateTime, 1000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="w-full glass-card border-b border-white/[0.04]">
