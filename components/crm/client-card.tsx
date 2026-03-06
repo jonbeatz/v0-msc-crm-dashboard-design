@@ -28,11 +28,19 @@ export function ClientCard({ client, onClick, isRecentlyUpdated, onStepClick, ac
   const hasOverdueStep = client.priority === 'high' && completedCount < 5
 
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick()
+        }
+      }}
       className={cn(
-        'w-full rounded-2xl glass-card p-4 text-left transition-all duration-300',
-        'hover:bg-white/[0.04] focus:outline-none',
+        'w-full rounded-2xl glass-card p-4 text-left transition-all duration-300 cursor-pointer',
+        'hover:bg-white/[0.04] focus:outline-none focus:ring-2 focus:ring-primary/50',
         client.priority === 'high' && 'border-destructive/30 vader-alert-glow',
         isRecentlyUpdated && 'vader-active-border breathing-glow'
       )}
@@ -107,13 +115,9 @@ export function ClientCard({ client, onClick, isRecentlyUpdated, onStepClick, ac
                     ? 'bg-destructive/15 text-destructive vader-critical-pulse'
                     : 'bg-muted/40 text-muted-foreground',
                 isActive && 'active'
-              )}
-            >
-              {index + 1}
-            </button>
-          )
+)}
         })}
       </div>
-    </button>
+    </div>
   )
 }
