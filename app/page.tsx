@@ -81,7 +81,7 @@ export default function CRMDashboard() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background pb-14">
+    <div className="flex min-h-screen flex-col bg-background">
       {/* Status Bar */}
       <StatusBar 
         totalProjects={clients.length}
@@ -104,8 +104,10 @@ export default function CRMDashboard() {
           onStepClick={handleStepClick}
           activeStepFilter={stepFilter}
         />
-        <ActivityFeed activities={mockActivities} />
       </div>
+
+      {/* Slide-out Activity Feed */}
+      <ActivityFeed activities={mockActivities} />
 
       {/* Tactical Action Center (To-Do HUD) */}
       <TacticalActionCenter

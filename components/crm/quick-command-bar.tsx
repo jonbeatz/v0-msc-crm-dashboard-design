@@ -17,7 +17,7 @@ export function QuickCommandBar() {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 glass-card border-t border-white/[0.06] z-50">
+    <div className="glass-card border-t border-white/[0.06] mt-auto">
       <form onSubmit={handleSubmit} className="flex items-center gap-4 px-8 py-4">
         <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10">
           <Terminal className="h-4 w-4 text-primary" />
