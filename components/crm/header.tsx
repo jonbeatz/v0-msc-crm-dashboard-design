@@ -13,8 +13,9 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Sparkline } from '@/components/crm/sparkline'
 import { GlobalStatusGauge } from '@/components/crm/global-status-gauge'
+import { UserProfileDropdown } from '@/components/crm/user-profile-dropdown'
 import { cn } from '@/lib/utils'
-import { type Project } from '@/lib/crm-data'
+import { type Project, type User } from '@/lib/crm-data'
 
 export type ViewMode = 'technical' | 'executive'
 
@@ -29,12 +30,14 @@ interface HeaderProps {
   selectedProjectId: string
   onProjectChange: (projectId: string) => void
   onCreateProject: () => void
+  user: User
+  onOpenUserDashboard: () => void
 }
 
 // Mock velocity data for last 7 days
 const velocityData = [3, 5, 4, 7, 6, 8, 9]
 
-export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onViewModeChange, onOpenCalendar, projects, selectedProjectId, onProjectChange, onCreateProject }: HeaderProps) {
+export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onViewModeChange, onOpenCalendar, projects, selectedProjectId, onProjectChange, onCreateProject, user, onOpenUserDashboard }: HeaderProps) {
   const selectedProject = projects.find(p => p.id === selectedProjectId)
   const activeProjects = projects.filter(p => p.status === 'active')
   const archivedProjects = projects.filter(p => p.status === 'archived')
@@ -230,6 +233,12 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onVi
           <Plus className="h-4 w-4 lg:mr-2" />
           <span className="hidden lg:inline">Add Client</span>
         </Button>
+
+        {/* User Profile Dropdown */}
+        <UserProfileDropdown
+          user={user}
+          onOpenDashboard={onOpenUserDashboard}
+        />
       </div>
     </header>
   )

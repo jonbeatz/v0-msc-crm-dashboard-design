@@ -5,6 +5,38 @@ export interface Project {
   status: 'active' | 'archived' | 'draft'
 }
 
+export interface UserPreferences {
+  theme: 'dark' | 'light' | 'system'
+  emailNotifications: boolean
+  desktopNotifications: boolean
+  weeklyDigest: boolean
+  defaultView: 'technical' | 'executive'
+}
+
+export interface UserBranding {
+  companyName: string
+  logo?: string
+  primaryColor: string
+  accentColor: string
+}
+
+export interface User {
+  id: string
+  name: string
+  email: string
+  avatar?: string
+  bio?: string
+  role: 'admin' | 'manager' | 'editor'
+  branding: UserBranding
+  preferences: UserPreferences
+  stats: {
+    totalProjects: number
+    activeClients: number
+    tasksCompleted: number
+    tasksCompletedThisWeek: number[]
+  }
+}
+
 export interface Client {
   id: string
   name: string
@@ -237,6 +269,34 @@ export const systemLogs: string[] = [
   '[SYS] Storage threshold at 67% capacity',
   '[MSC] Theme update available for flavor starter pack',
 ]
+
+export const mockUser: User = {
+  id: 'user_1',
+  name: 'Jon Beatz',
+  email: 'jon@mscstudio.com',
+  avatar: '',
+  bio: 'Music producer and studio manager. Helping indie artists build their online presence.',
+  role: 'admin',
+  branding: {
+    companyName: 'MSC Studio',
+    logo: '',
+    primaryColor: '#00ff88',
+    accentColor: '#ffaa00',
+  },
+  preferences: {
+    theme: 'dark',
+    emailNotifications: true,
+    desktopNotifications: true,
+    weeklyDigest: true,
+    defaultView: 'technical',
+  },
+  stats: {
+    totalProjects: 4,
+    activeClients: 6,
+    tasksCompleted: 24,
+    tasksCompletedThisWeek: [3, 5, 2, 4, 6, 3, 1], // Sun-Sat
+  },
+}
 
 export const mockActivities: Activity[] = [
   {

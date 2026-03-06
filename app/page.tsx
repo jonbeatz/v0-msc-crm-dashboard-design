@@ -13,13 +13,16 @@ import { StatusBar } from '@/components/crm/status-bar'
 import { TacticalActionCenter } from '@/components/crm/tactical-action-center'
 import { CalendarModal } from '@/components/crm/calendar-modal'
 import { AddProjectDialog } from '@/components/crm/add-project-dialog'
-import { mockClients, mockActivities, mockTasks, mockProjects, type Client, type Task, type Project } from '@/lib/crm-data'
+import { UserDashboardModal } from '@/components/crm/user-dashboard-modal'
+import { mockClients, mockActivities, mockTasks, mockProjects, mockUser, type Client, type Task, type Project, type User } from '@/lib/crm-data'
 
 export default function CRMDashboard() {
   const [clients, setClients] = useState<Client[]>(mockClients)
   const [tasks, setTasks] = useState<Task[]>(mockTasks)
   const [projects, setProjects] = useState<Project[]>(mockProjects)
+  const [user, setUser] = useState<User>(mockUser)
   const [addProjectDialogOpen, setAddProjectDialogOpen] = useState(false)
+  const [userDashboardOpen, setUserDashboardOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('technical')
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -91,6 +94,10 @@ export default function CRMDashboard() {
     setProjects((prev) => [...prev, newProject])
   }
 
+  const handleUpdateUser = (updatedUser: User) => {
+    setUser(updatedUser)
+  }
+
   const handleStepClick = (clientId: string, stepIndex: number) => {
     // Toggle filter: if same step clicked, clear filter
     if (stepFilter?.clientId === clientId && stepFilter?.stepIndex === stepIndex) {
@@ -150,6 +157,8 @@ export default function CRMDashboard() {
         selectedProjectId={selectedProjectId}
         onProjectChange={setSelectedProjectId}
         onCreateProject={() => setAddProjectDialogOpen(true)}
+        user={user}
+        onOpenUserDashboard={() => setUserDashboardOpen(true)}
       />
 
       {viewMode === 'technical' ? (
@@ -216,6 +225,13 @@ export default function CRMDashboard() {
         open={addProjectDialogOpen}
         onOpenChange={setAddProjectDialogOpen}
         onAddProject={handleAddProject}
+      />
+
+      <UserDashboardModal
+        open={userDashboardOpen}
+        onOpenChange={setUserDashboardOpen}
+        user={user}
+        onUpdateUser={handleUpdateUser}
       />
 
       <CalendarModal
