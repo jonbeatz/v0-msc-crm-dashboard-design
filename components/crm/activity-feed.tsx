@@ -33,7 +33,7 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
           "fixed right-0 top-1/2 -translate-y-1/2 z-40 h-24 w-8 rounded-l-xl rounded-r-none",
           "glass-card border border-r-0 border-white/[0.06]",
           "hover:bg-white/[0.04] transition-all duration-300",
-          isOpen && "right-80"
+          isOpen && "right-[340px]"
         )}
       >
         <div className="flex flex-col items-center gap-2">
@@ -46,13 +46,13 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
         </div>
       </Button>
 
-      {/* Slide-out Panel - Solid Background */}
+      {/* Slide-out Panel - Glass with darker background */}
       <aside
         className={cn(
-          "fixed right-0 top-0 bottom-0 w-80 z-30",
-          "bg-[#1c1c1c] border-l border-white/[0.08]",
+          "fixed right-0 top-0 bottom-0 w-[340px] z-30",
+          "glass-card border-l border-white/[0.08]",
           "transform transition-transform duration-300 ease-in-out",
-          "flex flex-col shadow-2xl shadow-black/50",
+          "flex flex-col shadow-2xl shadow-black/60",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
