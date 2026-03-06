@@ -1,0 +1,18 @@
+MSC CRM v1.0
+============
+Date: March 6, 2026
+
+Features:
+- Kanban pipeline with 6 stages (Prep, Domain, Hosting, Collab, Theme, Launch)
+- Client cards with circular progress gauges and step indicators
+- Client drawer with Vault (secure credentials), Financials, Task checklist
+- Fluent ecosystem communication feed
+- Team Activity slide-out sidebar with dimmed backdrop
+- Tactical Action Center (To-Do HUD) with task detail modals
+- Studio Operations section with Pulse feed, Storage bars, FluentSupport widget
+- Status bar with live metrics
+- Quick Command bar
+- Technical/Executive view toggle in header
+- Glassmorphism UI with Electric Green (#00ff88) accents
+- Vader Protocol theme: Obsidian (#121212), Charcoal (#1c1c1c)
+- Subtle grid texture background
