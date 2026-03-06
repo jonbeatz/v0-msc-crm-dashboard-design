@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Header, type ViewMode } from '@/components/crm/header'
 import { ExecutiveSummary } from '@/components/crm/executive-summary'
 import { KanbanBoard } from '@/components/crm/kanban-board'
@@ -14,12 +14,49 @@ import { TacticalActionCenter } from '@/components/crm/tactical-action-center'
 import { CalendarModal } from '@/components/crm/calendar-modal'
 import { AddProjectDialog } from '@/components/crm/add-project-dialog'
 import { UserDashboardModal } from '@/components/crm/user-dashboard-modal'
-import { mockClients, mockActivities, mockTasks, mockProjects, mockUser, type Client, type Task, type Project, type User } from '@/lib/crm-data'
+import { useMSCData } from '@/hooks/use-msc-data'
+import { mockActivities, mockUser, type Client, type Task, type Project, type User } from '@/lib/crm-data'
+import type { MSCClient } from '@/lib/wordpress-types'
 
+/**
+ * MSC CRM Dashboard
+ * 
+ * Data is fetched via useMSCData hook which simulates WordPress REST API.
+ * Cursor AI can swap mock data for real axios calls to:
+ * - GET /wp-json/wp/v2/msc_clients
+ * - GET /wp-json/wp/v2/msc_projects  
+ * - GET /wp-json/wp/v2/msc_tasks
+ */
 export default function CRMDashboard() {
-  const [clients, setClients] = useState<Client[]>(mockClients)
-  const [tasks, setTasks] = useState<Task[]>(mockTasks)
-  const [projects, setProjects] = useState<Project[]>(mockProjects)
+  // WordPress data fetching hook - replace mock with real API
+  const {
+    clients: mscClients,
+    projects,
+    tasks,
+    isLoading,
+    error,
+    updateClient: updateMSCClient,
+    addClient: addMSCClient,
+    updateTask,
+    addTask: addMSCTask,
+    addProject: addMSCProject,
+  } = useMSCData({ autoFetch: true })
+
+  // Convert MSCClient to legacy Client format for existing components
+  const clients = useMemo(() => mscClients.map(msc => ({
+    id: msc.id,
+    name: msc.title,
+    projectId: msc.msc_project_id,
+    currentStep: msc.currentStep,
+    completedSteps: msc.completedSteps,
+    consultingCall: msc.msc_consulting_call,
+    depositPaid: msc.msc_deposit_status === 'paid',
+    wpLoginUrl: msc.msc_wp_login_url,
+    loginUser: msc.msc_login_user,
+    password: msc.msc_vault_pass,
+    priority: msc.msc_priority,
+  } as Client)), [mscClients])
+
   const [user, setUser] = useState<User>(mockUser)
   const [addProjectDialogOpen, setAddProjectDialogOpen] = useState(false)
   const [userDashboardOpen, setUserDashboardOpen] = useState(false)
@@ -72,26 +109,57 @@ export default function CRMDashboard() {
   }
 
   const handleUpdateClient = (updatedClient: Client) => {
-    setClients((prev) =>
-      prev.map((c) => (c.id === updatedClient.id ? updatedClient : c))
-    )
+    // Convert back to MSCClient format and update via hook
+    const mscClient = mscClients.find(c => c.id === updatedClient.id)
+    if (mscClient) {
+      updateMSCClient({
+        ...mscClient,
+        title: updatedClient.name,
+        msc_project_id: updatedClient.projectId,
+        msc_consulting_call: updatedClient.consultingCall,
+        msc_deposit_status: updatedClient.depositPaid ? 'paid' : 'pending',
+        msc_wp_login_url: updatedClient.wpLoginUrl,
+        msc_login_user: updatedClient.loginUser,
+        msc_vault_pass: updatedClient.password,
+        msc_priority: updatedClient.priority,
+        // Update step statuses based on completedSteps
+        msc_step_1_domain: updatedClient.completedSteps[0] ? 'done' : 'pending',
+        msc_step_2_hosting: updatedClient.completedSteps[1] ? 'done' : 'pending',
+        msc_step_3_collab: updatedClient.completedSteps[2] ? 'done' : 'pending',
+        msc_step_4_theme: updatedClient.completedSteps[3] ? 'done' : 'pending',
+        msc_step_5_launch: updatedClient.completedSteps[4] ? 'done' : 'pending',
+      })
+    }
     setSelectedClient(updatedClient)
     setRecentlyUpdatedId(updatedClient.id)
   }
 
   const handleAddClient = (newClient: Client) => {
-    setClients((prev) => [...prev, newClient])
+    // Convert to MSCClient format and add via hook
+    addMSCClient({
+      title: newClient.name,
+      msc_project_id: newClient.projectId,
+      msc_step_1_domain: newClient.completedSteps[0] ? 'done' : 'pending',
+      msc_step_2_hosting: newClient.completedSteps[1] ? 'done' : 'pending',
+      msc_step_3_collab: newClient.completedSteps[2] ? 'done' : 'pending',
+      msc_step_4_theme: newClient.completedSteps[3] ? 'done' : 'pending',
+      msc_step_5_launch: newClient.completedSteps[4] ? 'done' : 'pending',
+      msc_vault_pass: newClient.password,
+      msc_deposit_status: newClient.depositPaid ? 'paid' : 'pending',
+      msc_wp_login_url: newClient.wpLoginUrl,
+      msc_login_user: newClient.loginUser,
+      msc_priority: newClient.priority,
+      msc_consulting_call: newClient.consultingCall,
+    })
     setRecentlyUpdatedId(newClient.id)
-    // Update project client count
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id === newClient.projectId ? { ...p, clientCount: p.clientCount + 1 } : p
-      )
-    )
   }
 
   const handleAddProject = (newProject: Project) => {
-    setProjects((prev) => [...prev, newProject])
+    addMSCProject({
+      name: newProject.name,
+      clientCount: newProject.clientCount,
+      status: newProject.status,
+    })
   }
 
   const handleUpdateUser = (updatedUser: User) => {
@@ -108,14 +176,14 @@ export default function CRMDashboard() {
   }
 
   const handleToggleTask = (taskId: string) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t))
-    )
+    const task = tasks.find(t => t.id === taskId)
+    if (task) {
+      updateTask({ ...task, completed: !task.completed })
+    }
   }
 
   const handleAddTask = (taskName: string) => {
-    const newTask: Task = {
-      id: `t${Date.now()}`,
+    addMSCTask({
       name: taskName,
       clientId: '',
       clientName: 'Unassigned',
@@ -123,8 +191,32 @@ export default function CRMDashboard() {
       dueAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
       assignedToMe: true,
       completed: false,
-    }
-    setTasks((prev) => [...prev, newTask])
+    })
+  }
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-sm text-muted-foreground">Loading MSC CRM...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="text-destructive text-4xl">!</div>
+          <p className="text-sm text-muted-foreground">Failed to load data</p>
+          <p className="text-xs text-muted-foreground/60">{error.message}</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -132,7 +224,7 @@ export default function CRMDashboard() {
       {/* Status Bar */}
       <StatusBar 
         totalProjects={projects.length}
-        activeProjects={clients.filter(c => c.currentStage !== 'launch').length}
+        activeProjects={clients.filter(c => c.currentStep < 5).length}
         completedToday={tasks.filter(t => t.completed).length}
         overdueCount={tasks.filter(t => !t.completed && t.dueAt < new Date()).length}
         onFilterActive={() => setSearchQuery('')}
@@ -240,8 +332,7 @@ export default function CRMDashboard() {
         tasks={tasks}
         clients={clients}
         onAddEvent={(event) => {
-          const newTask: Task = {
-            id: `t${Date.now()}`,
+          addMSCTask({
             name: event.name,
             clientId: event.clientId,
             clientName: event.clientName,
@@ -250,8 +341,7 @@ export default function CRMDashboard() {
             assignedToMe: true,
             completed: false,
             description: event.description,
-          }
-          setTasks((prev) => [...prev, newTask])
+          })
         }}
       />
     </div>

@@ -5,6 +5,9 @@ export interface Project {
   status: 'active' | 'archived' | 'draft'
 }
 
+// Re-export WordPress types for components that need them
+export type { MSCClient, MSCProject, MSCTask, MSCStepStatus } from './wordpress-types'
+
 export interface UserPreferences {
   theme: 'dark' | 'light' | 'system'
   emailNotifications: boolean
