@@ -115,7 +115,11 @@ export function ClientCard({ client, onClick, isRecentlyUpdated, onStepClick, ac
                     ? 'bg-destructive/15 text-destructive vader-critical-pulse'
                     : 'bg-muted/40 text-muted-foreground',
                 isActive && 'active'
-)}
+              )}
+            >
+              {index + 1}
+            </button>
+          )
         })}
       </div>
     </div>
