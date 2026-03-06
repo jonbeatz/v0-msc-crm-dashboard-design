@@ -26,24 +26,28 @@ export function CircularProgress({
       >
         {/* Background Track */}
         <circle
-          className="progress-track"
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
+          stroke="#2d2d2d"
           strokeWidth={strokeWidth}
         />
         {/* Progress Fill */}
         <circle
-          className="progress-fill"
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
+          stroke="#00ff88"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
+          style={{
+            filter: 'drop-shadow(0 0 4px rgba(0, 255, 136, 0.5))',
+            transition: 'stroke-dashoffset 0.5s ease',
+          }}
         />
       </svg>
       {showLabel && (
