@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { Search, Plus, Film, Activity, Monitor, BarChart3 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,17 +7,20 @@ import { Sparkline } from '@/components/crm/sparkline'
 import { GlobalStatusGauge } from '@/components/crm/global-status-gauge'
 import { cn } from '@/lib/utils'
 
+export type ViewMode = 'technical' | 'executive'
+
 interface HeaderProps {
   searchQuery: string
   onSearchChange: (query: string) => void
   onQuickAdd: () => void
+  viewMode: ViewMode
+  onViewModeChange: (mode: ViewMode) => void
 }
 
 // Mock velocity data for last 7 days
 const velocityData = [3, 5, 4, 7, 6, 8, 9]
 
-export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps) {
-  const [viewMode, setViewMode] = useState<'technical' | 'executive'>('technical')
+export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onViewModeChange }: HeaderProps) {
 
   return (
     <header className="flex items-center justify-between glass-card border-b border-white/[0.06] px-8 py-5">
@@ -58,7 +60,7 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps)
           <div className="flex items-center rounded-xl bg-muted/40 p-1">
             <button
               type="button"
-              onClick={() => setViewMode('technical')}
+              onClick={() => onViewModeChange('technical')}
               className={cn(
                 'flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200',
                 viewMode === 'technical'
@@ -71,7 +73,7 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps)
             </button>
             <button
               type="button"
-              onClick={() => setViewMode('executive')}
+              onClick={() => onViewModeChange('executive')}
               className={cn(
                 'flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200',
                 viewMode === 'executive'

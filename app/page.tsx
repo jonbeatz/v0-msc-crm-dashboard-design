@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Header } from '@/components/crm/header'
+import { Header, type ViewMode } from '@/components/crm/header'
+import { ExecutiveSummary } from '@/components/crm/executive-summary'
 import { KanbanBoard } from '@/components/crm/kanban-board'
 import { ClientDrawer } from '@/components/crm/client-drawer'
 import { ActivityFeed } from '@/components/crm/activity-feed'
@@ -15,6 +16,7 @@ import { mockClients, mockActivities, mockTasks, type Client, type Task } from '
 export default function CRMDashboard() {
   const [clients, setClients] = useState<Client[]>(mockClients)
   const [tasks, setTasks] = useState<Task[]>(mockTasks)
+  const [viewMode, setViewMode] = useState<ViewMode>('technical')
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
@@ -94,34 +96,42 @@ export default function CRMDashboard() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onQuickAdd={() => setAddDialogOpen(true)}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
 
-      <div className="flex flex-1 overflow-hidden">
-        <KanbanBoard
-          clients={filteredClients}
-          onClientSelect={handleClientSelect}
-          recentlyUpdatedId={recentlyUpdatedId}
-          onStepClick={handleStepClick}
-          activeStepFilter={stepFilter}
-        />
-      </div>
+      {viewMode === 'technical' ? (
+        <>
+          <div className="flex flex-1 overflow-hidden">
+            <KanbanBoard
+              clients={filteredClients}
+              onClientSelect={handleClientSelect}
+              recentlyUpdatedId={recentlyUpdatedId}
+              onStepClick={handleStepClick}
+              activeStepFilter={stepFilter}
+            />
+          </div>
 
-      {/* Slide-out Activity Feed */}
-      <ActivityFeed activities={mockActivities} />
+          {/* Slide-out Activity Feed */}
+          <ActivityFeed activities={mockActivities} />
 
-      {/* Tactical Action Center (To-Do HUD) */}
-      <TacticalActionCenter
-        tasks={tasks}
-        selectedStepFilter={stepFilter}
-        onToggleTask={handleToggleTask}
-        onAddTask={handleAddTask}
-      />
+          {/* Tactical Action Center (To-Do HUD) */}
+          <TacticalActionCenter
+            tasks={tasks}
+            selectedStepFilter={stepFilter}
+            onToggleTask={handleToggleTask}
+            onAddTask={handleAddTask}
+          />
 
-      {/* Studio Operations Section */}
-      <StudioOperations />
+          {/* Studio Operations Section */}
+          <StudioOperations />
 
-      {/* Quick Command Bar */}
-      <QuickCommandBar />
+          {/* Quick Command Bar */}
+          <QuickCommandBar />
+        </>
+      ) : (
+        <ExecutiveSummary clients={clients} tasks={tasks} />
+      )}
 
       <ClientDrawer
         client={selectedClient}
