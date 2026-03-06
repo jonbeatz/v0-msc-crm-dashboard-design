@@ -17,21 +17,20 @@ export function QuickCommandBar() {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-card/95 backdrop-blur-sm z-50">
-      <form onSubmit={handleSubmit} className="flex items-center gap-3 px-6 py-3">
-        <div className="flex items-center gap-2 text-primary">
-          <Terminal className="h-4 w-4" />
-          <ChevronRight className="h-3 w-3" />
+    <div className="fixed bottom-0 left-0 right-0 glass-card border-t border-white/[0.06] z-50">
+      <form onSubmit={handleSubmit} className="flex items-center gap-4 px-8 py-4">
+        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10">
+          <Terminal className="h-4 w-4 text-primary" />
         </div>
         <Input
           type="text"
           value={command}
           onChange={(e) => setCommand(e.target.value)}
-          placeholder="Type a command (e.g., /status, /add-client, /search)..."
-          className="flex-1 border-0 bg-transparent font-mono text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+          placeholder="Type a command (e.g., /status)..."
+          className="flex-1 border-0 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
         />
-        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-          Enter to execute
+        <span className="text-xs text-muted-foreground">
+          Press Enter to run
         </span>
       </form>
     </div>

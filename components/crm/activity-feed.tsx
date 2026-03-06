@@ -19,47 +19,51 @@ function formatTimeAgo(date: Date): string {
 
 export function ActivityFeed({ activities }: ActivityFeedProps) {
   return (
-    <aside className="w-72 flex-shrink-0 border-l border-border bg-card p-3 flex flex-col">
-      <div className="flex items-center gap-2 mb-3">
-        <Activity className="h-3.5 w-3.5 text-primary" />
-        <h2 className="font-mono text-xs font-semibold uppercase tracking-widest text-foreground">
+    <aside className="w-80 flex-shrink-0 border-l border-white/[0.06] glass-card p-5 flex flex-col">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10">
+          <Activity className="h-4 w-4 text-primary" />
+        </div>
+        <h2 className="text-sm font-semibold text-foreground">
           Team Activity
         </h2>
       </div>
       
-      <div className="space-y-2 flex-1 overflow-y-auto">
+      <div className="space-y-3 flex-1 overflow-y-auto">
         {activities.map((activity, index) => (
           <div
             key={activity.id}
             className={cn(
-              'rounded-sm border border-border bg-background p-2.5 transition-all duration-200',
-              index === 0 && 'border-primary/30'
+              'rounded-xl p-4 transition-all duration-200',
+              'bg-white/[0.02] border border-white/[0.04]',
+              index === 0 && 'border-primary/20 bg-primary/[0.03]'
             )}
           >
-            <div className="flex items-start gap-2.5">
+            <div className="flex items-start gap-3">
+              {/* Avatar Initials */}
               <div
                 className={cn(
-                  'flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-sm font-mono text-[10px] font-bold',
+                  'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-xs font-semibold',
                   activity.user === 'System'
-                    ? 'bg-primary/20 text-primary'
-                    : 'bg-muted text-muted-foreground'
+                    ? 'bg-primary/15 text-primary'
+                    : 'avatar-initials text-primary'
                 )}
               >
                 {activity.user.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-foreground leading-relaxed">
+                <p className="text-sm text-foreground leading-relaxed">
                   <span className="font-semibold text-primary">
                     {activity.user}
                   </span>{' '}
                   <span className="text-muted-foreground">{activity.action}</span>
                 </p>
-                <p className="font-mono text-[10px] text-muted-foreground truncate mt-0.5">
+                <p className="text-xs text-muted-foreground truncate mt-1">
                   {activity.target}
                 </p>
-                <div className="mt-1.5 flex items-center gap-1 text-muted-foreground">
-                  <Clock className="h-2.5 w-2.5" />
-                  <span className="font-mono text-[10px]">
+                <div className="mt-2 flex items-center gap-1.5 text-muted-foreground/60">
+                  <Clock className="h-3 w-3" />
+                  <span className="text-xs">
                     {formatTimeAgo(activity.timestamp)}
                   </span>
                 </div>
@@ -68,7 +72,6 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
           </div>
         ))}
       </div>
-
-      </aside>
+    </aside>
   )
 }

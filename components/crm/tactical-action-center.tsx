@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckSquare, AlertTriangle, ChevronRight, Clock, User } from 'lucide-react'
-import { Checkbox } from '@/components/ui/checkbox'
+import { CheckCircle2, Circle, AlertTriangle, Plus, Clock, User } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { TASK_STEPS, type Task } from '@/lib/crm-data'
@@ -33,11 +32,11 @@ export function TacticalActionCenter({
     const days = Math.floor(hours / 24)
 
     if (days > 0) {
-      return { text: `${days}d remaining`, isOverdue }
+      return { text: `${days}d left`, isOverdue }
     } else if (hours > 0) {
-      return { text: `${hours}h remaining`, isOverdue }
+      return { text: `${hours}h left`, isOverdue }
     } else if (minutes > 0) {
-      return { text: isOverdue ? `${minutes}m overdue` : `${minutes}m remaining`, isOverdue }
+      return { text: isOverdue ? `${minutes}m overdue` : `${minutes}m left`, isOverdue }
     } else {
       return { text: 'Due now', isOverdue: true }
     }
@@ -52,13 +51,10 @@ export function TacticalActionCenter({
     : tasks
 
   const sortedTasks = [...filteredTasks].sort((a, b) => {
-    // Completed tasks go to bottom
     if (a.completed !== b.completed) return a.completed ? 1 : -1
-    // Overdue tasks first
     const aOverdue = a.dueAt.getTime() < Date.now()
     const bOverdue = b.dueAt.getTime() < Date.now()
     if (aOverdue !== bOverdue) return aOverdue ? -1 : 1
-    // Then by due date
     return a.dueAt.getTime() - b.dueAt.getTime()
   })
 
@@ -71,141 +67,138 @@ export function TacticalActionCenter({
   }
 
   return (
-    <section className="bg-[#121212] border-t border-border">
+    <section className="glass-card border-t border-white/[0.06] mx-6 mb-6 rounded-2xl overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-[#1c1c1c]">
-        <div className="flex items-center gap-2">
-          <CheckSquare className="h-4 w-4 text-primary" />
-          <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-foreground">
-            Tactical Action Center
-          </h2>
-          {selectedStepFilter && (
-            <span className="ml-2 px-2 py-0.5 rounded-sm bg-primary/20 border border-primary/30 font-mono text-[10px] text-primary">
-              Filtering: {TASK_STEPS[selectedStepFilter.stepIndex]}
-            </span>
-          )}
+      <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10">
+            <CheckCircle2 className="h-4 w-4 text-primary" />
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-foreground">
+              My Tasks
+            </h2>
+            {selectedStepFilter && (
+              <span className="text-xs text-primary">
+                Filtering: {TASK_STEPS[selectedStepFilter.stepIndex]}
+              </span>
+            )}
+          </div>
         </div>
-        <span className="font-mono text-xs text-muted-foreground">
+        <span className="px-3 py-1 rounded-full bg-muted/50 text-xs font-medium text-muted-foreground">
           {sortedTasks.filter((t) => !t.completed).length} active
         </span>
       </div>
 
-      {/* Task List */}
-      <div className="max-h-48 overflow-y-auto">
+      {/* Task List - Sticky Note Style */}
+      <div className="max-h-56 overflow-y-auto p-4">
         {sortedTasks.length === 0 ? (
-          <div className="flex items-center justify-center h-20 text-muted-foreground font-mono text-xs">
-            No tasks {selectedStepFilter ? 'for this step' : 'available'}
+          <div className="flex items-center justify-center h-24 text-muted-foreground text-sm">
+            No tasks {selectedStepFilter ? 'for this step' : 'yet'}
           </div>
         ) : (
-          <table className="w-full">
-            <thead className="sticky top-0 bg-[#1c1c1c] z-10">
-              <tr className="border-b border-border">
-                <th className="w-10 px-3 py-2 text-left"></th>
-                <th className="px-3 py-2 text-left font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Task
-                </th>
-                <th className="px-3 py-2 text-left font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Client
-                </th>
-                <th className="px-3 py-2 text-left font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Step
-                </th>
-                <th className="px-3 py-2 text-right font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Due
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedTasks.map((task) => {
-                const timeInfo = formatTimeRemaining(task.dueAt)
-                return (
-                  <tr
-                    key={task.id}
+          <div className="space-y-2">
+            {sortedTasks.map((task) => {
+              const timeInfo = formatTimeRemaining(task.dueAt)
+              return (
+                <div
+                  key={task.id}
+                  className={cn(
+                    'task-strip p-4 flex items-center gap-4',
+                    task.completed && 'opacity-50'
+                  )}
+                >
+                  {/* Checkbox - Custom Styled */}
+                  <button
+                    onClick={() => onToggleTask(task.id)}
                     className={cn(
-                      'border-b border-border/50 transition-colors',
-                      task.completed && 'opacity-50',
-                      !task.completed && task.assignedToMe && 'bg-primary/5',
-                      timeInfo.isOverdue && !task.completed && 'bg-destructive/5'
+                      'flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg transition-all duration-200',
+                      task.completed
+                        ? 'bg-primary/20 text-primary'
+                        : 'bg-muted/30 text-muted-foreground hover:bg-muted/50'
                     )}
                   >
-                    <td className="px-3 py-2">
-                      <Checkbox
-                        checked={task.completed}
-                        onCheckedChange={() => onToggleTask(task.id)}
-                        className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                      />
-                    </td>
-                    <td className="px-3 py-2">
-                      <div className="flex items-center gap-2">
-                        {timeInfo.isOverdue && !task.completed && (
-                          <AlertTriangle className="h-3 w-3 text-destructive vader-critical-pulse flex-shrink-0" />
+                    {task.completed ? (
+                      <CheckCircle2 className="h-4 w-4" />
+                    ) : (
+                      <Circle className="h-4 w-4" />
+                    )}
+                  </button>
+
+                  {/* Task Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      {timeInfo.isOverdue && !task.completed && (
+                        <AlertTriangle className="h-3.5 w-3.5 text-destructive flex-shrink-0" />
+                      )}
+                      <span
+                        className={cn(
+                          'text-sm',
+                          task.completed ? 'line-through text-muted-foreground' : 'text-foreground',
+                          task.assignedToMe && !task.completed && 'text-primary font-medium'
                         )}
-                        <span
-                          className={cn(
-                            'font-mono text-xs',
-                            task.completed ? 'line-through text-muted-foreground' : 'text-foreground',
-                            task.assignedToMe && !task.completed && 'text-primary'
-                          )}
-                        >
-                          {task.name}
-                        </span>
-                        {task.assignedToMe && !task.completed && (
-                          <User className="h-3 w-3 text-primary flex-shrink-0" />
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-3 py-2 font-mono text-xs text-muted-foreground">
-                      {task.clientName}
-                    </td>
-                    <td className="px-3 py-2">
-                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-muted font-mono text-[10px] text-muted-foreground border border-border">
+                      >
+                        {task.name}
+                      </span>
+                      {task.assignedToMe && !task.completed && (
+                        <User className="h-3 w-3 text-primary flex-shrink-0" />
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-xs text-muted-foreground">
+                        {task.clientName}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-muted/40 text-[10px] text-muted-foreground">
                         {TASK_STEPS[task.stepIndex]}
                       </span>
-                    </td>
-                    <td className="px-3 py-2 text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Clock className={cn(
-                          'h-3 w-3',
-                          timeInfo.isOverdue && !task.completed ? 'text-destructive' : 'text-muted-foreground'
-                        )} />
-                        <span
-                          className={cn(
-                            'font-mono text-[11px]',
-                            task.completed
-                              ? 'text-muted-foreground'
-                              : timeInfo.isOverdue
-                              ? 'text-destructive font-semibold'
-                              : 'text-muted-foreground'
-                          )}
-                        >
-                          {task.completed ? 'Done' : timeInfo.text}
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+                    </div>
+                  </div>
+
+                  {/* Due Time */}
+                  <div className="flex items-center gap-2">
+                    <Clock className={cn(
+                      'h-3.5 w-3.5',
+                      timeInfo.isOverdue && !task.completed ? 'text-destructive' : 'text-muted-foreground'
+                    )} />
+                    <span
+                      className={cn(
+                        'text-xs',
+                        task.completed
+                          ? 'text-muted-foreground'
+                          : timeInfo.isOverdue
+                          ? 'text-destructive font-medium'
+                          : 'text-muted-foreground'
+                      )}
+                    >
+                      {task.completed ? 'Done' : timeInfo.text}
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         )}
       </div>
 
-      {/* Quick Add Task - Terminal Style */}
-      <form onSubmit={handleSubmit} className="border-t border-border bg-[#0a0a0a]">
-        <div className="flex items-center">
-          <span className="pl-4 pr-2 font-mono text-sm text-primary">{'>'}</span>
+      {/* Quick Add Task - Soft Input */}
+      <form onSubmit={handleSubmit} className="border-t border-white/[0.06] p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-muted/30">
+            <Plus className="h-4 w-4 text-muted-foreground" />
+          </div>
           <Input
             type="text"
-            placeholder="New Task..."
+            placeholder="Add a new task..."
             value={newTaskInput}
             onChange={(e) => setNewTaskInput(e.target.value)}
-            className="flex-1 h-10 bg-transparent border-0 rounded-none font-mono text-sm placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="flex-1 h-10 bg-transparent border-0 rounded-xl text-sm placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/30"
           />
           <button
             type="submit"
-            className="px-4 h-10 font-mono text-xs text-primary hover:bg-primary/10 transition-colors"
+            disabled={!newTaskInput.trim()}
+            className="px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <ChevronRight className="h-4 w-4" />
+            Add
           </button>
         </div>
       </form>

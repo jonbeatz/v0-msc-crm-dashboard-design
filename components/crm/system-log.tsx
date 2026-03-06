@@ -8,13 +8,13 @@ export function SystemLog() {
   const duplicatedLogs = [...systemLogs, ...systemLogs]
 
   return (
-    <div className="w-full bg-[#0a0a0a] border-b border-border overflow-hidden">
-      <div className="flex items-center h-7">
+    <div className="w-full glass-card border-b border-white/[0.04] overflow-hidden">
+      <div className="flex items-center h-8">
         {/* Terminal Icon */}
-        <div className="flex-shrink-0 flex items-center gap-1.5 px-3 border-r border-border h-full bg-[#121212]">
-          <Terminal className="h-3 w-3 text-primary" />
-          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-            SYS
+        <div className="flex-shrink-0 flex items-center gap-2 px-4 border-r border-white/[0.04] h-full">
+          <Terminal className="h-3.5 w-3.5 text-primary" />
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            System
           </span>
         </div>
 
@@ -24,7 +24,7 @@ export function SystemLog() {
             {duplicatedLogs.map((log, index) => (
               <span
                 key={index}
-                className="inline-block font-mono text-[11px] text-primary/80 px-6"
+                className="inline-block font-mono text-xs text-primary/70 px-8"
               >
                 {log}
               </span>

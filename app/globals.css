@@ -3,46 +3,46 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Vader Protocol Theme - Dark Cinematic CRM - Electric Green (#00ff88) */
+/* Vader Protocol Theme - Refined Studio Console - Electric Green (#00ff88) */
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback';
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --font-sans: 'Outfit', 'Outfit Fallback', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
   --color-background: #121212;
-  --color-foreground: #e5e5e5;
-  --color-card: #1c1c1c;
-  --color-card-foreground: #e5e5e5;
-  --color-popover: #1c1c1c;
-  --color-popover-foreground: #e5e5e5;
+  --color-foreground: #e8e8e8;
+  --color-card: rgba(28, 28, 28, 0.8);
+  --color-card-foreground: #e8e8e8;
+  --color-popover: rgba(28, 28, 28, 0.95);
+  --color-popover-foreground: #e8e8e8;
   --color-primary: #00ff88;
   --color-primary-foreground: #121212;
-  --color-secondary: #1c1c1c;
-  --color-secondary-foreground: #e5e5e5;
-  --color-muted: #2d2d2d;
-  --color-muted-foreground: #6b6b6b;
+  --color-secondary: rgba(28, 28, 28, 0.6);
+  --color-secondary-foreground: #e8e8e8;
+  --color-muted: #262626;
+  --color-muted-foreground: #888888;
   --color-accent: #00ff88;
   --color-accent-foreground: #121212;
-  --color-destructive: #ff3e3e;
+  --color-destructive: #ff5555;
   --color-destructive-foreground: #ffffff;
-  --color-border: #2d2d2d;
-  --color-input: #2d2d2d;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-input: rgba(45, 45, 45, 0.6);
   --color-ring: #00ff88;
   --color-chart-1: #00ff88;
   --color-chart-2: #00cc6a;
   --color-chart-3: #009950;
-  --color-chart-4: #ff3e3e;
-  --color-chart-5: #ff6b6b;
-  --radius-sm: 0;
-  --radius-md: 0.125rem;
-  --radius-lg: 0.25rem;
-  --radius-xl: 0.5rem;
-  --color-sidebar: #1c1c1c;
-  --color-sidebar-foreground: #e5e5e5;
+  --color-chart-4: #ff5555;
+  --color-chart-5: #ff8888;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --color-sidebar: rgba(28, 28, 28, 0.8);
+  --color-sidebar-foreground: #e8e8e8;
   --color-sidebar-primary: #00ff88;
   --color-sidebar-primary-foreground: #121212;
-  --color-sidebar-accent: #2d2d2d;
-  --color-sidebar-accent-foreground: #e5e5e5;
-  --color-sidebar-border: #2d2d2d;
+  --color-sidebar-accent: rgba(45, 45, 45, 0.6);
+  --color-sidebar-accent-foreground: #e8e8e8;
+  --color-sidebar-border: rgba(255, 255, 255, 0.08);
   --color-sidebar-ring: #00ff88;
 }
 
@@ -52,77 +52,102 @@
   }
   body {
     @apply bg-background text-foreground;
+    background: radial-gradient(ellipse at 50% 0%, #1a1a1a 0%, #121212 50%, #0d0d0d 100%);
+    min-height: 100vh;
   }
 }
 
-/* Vader Protocol Glow Effects - Electric Green */
+/* Glassmorphism Base */
+.glass-card {
+  background: rgba(28, 28, 28, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Premium Studio Glow Effects - Soft & Breathing */
 .vader-glow {
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 40px rgba(0, 255, 136, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 255, 136, 0.15), 0 0 60px rgba(0, 255, 136, 0.08);
 }
 
 .vader-glow-sm {
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.25), 0 0 20px rgba(0, 255, 136, 0.1);
+  box-shadow: 0 2px 20px rgba(0, 255, 136, 0.12), 0 0 40px rgba(0, 255, 136, 0.06);
 }
 
 .vader-glow-text {
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.4), 0 0 40px rgba(0, 255, 136, 0.2);
 }
 
 .vader-alert-glow {
-  box-shadow: 0 0 15px rgba(255, 62, 62, 0.4), 0 0 30px rgba(255, 62, 62, 0.15);
+  box-shadow: 0 4px 25px rgba(255, 85, 85, 0.2), 0 0 50px rgba(255, 85, 85, 0.1);
 }
 
 .vader-progress-glow {
-  box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
 }
 
-/* Vader Active Card Glow Border */
+/* Soft Active Card Glow */
 .vader-active-border {
-  box-shadow: 0 0 0 1px #00ff88, 0 0 15px rgba(0, 255, 136, 0.3);
+  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.4), 0 4px 30px rgba(0, 255, 136, 0.2);
 }
 
-/* Custom Scrollbar for Vader Theme */
+/* Breathing Glow Animation */
+@keyframes breathe-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.2), 0 0 40px rgba(0, 255, 136, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3), 0 0 60px rgba(0, 255, 136, 0.15);
+  }
+}
+
+.breathing-glow {
+  animation: breathe-glow 3s ease-in-out infinite;
+}
+
+/* Custom Scrollbar - Rounded & Subtle */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1c1c1c;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2d2d2d;
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00ff88;
+  background: rgba(0, 255, 136, 0.3);
 }
 
-/* Micro-Interactions - Button Hover Glow */
+/* Premium Button Interactions */
 .vader-btn-hover {
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .vader-btn-hover:hover {
-  box-shadow: 0 0 2px #00ff88, 0 0 8px rgba(0, 255, 136, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 255, 136, 0.25), 0 0 40px rgba(0, 255, 136, 0.1);
 }
 
-/* Vader Critical Pulse Animation */
+/* Soft Critical Pulse Animation */
 @keyframes vader-pulse-red {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 8px rgba(255, 62, 62, 0.5);
+    box-shadow: 0 0 15px rgba(255, 85, 85, 0.3);
   }
   50% {
-    opacity: 0.7;
-    box-shadow: 0 0 16px rgba(255, 62, 62, 0.8);
+    opacity: 0.85;
+    box-shadow: 0 0 25px rgba(255, 85, 85, 0.4);
   }
 }
 
 .vader-critical-pulse {
-  animation: vader-pulse-red 1.5s ease-in-out infinite;
+  animation: vader-pulse-red 2s ease-in-out infinite;
 }
 
 /* Sparkline Glow */
@@ -141,23 +166,9 @@
   transition: stroke-dashoffset 0.5s ease;
 }
 
-/* Tactical Scanline Grid Background */
+/* Subtle Ambient Background */
 .vader-scanline {
-  background-image: 
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 255, 136, 0.015) 2px,
-      rgba(0, 255, 136, 0.015) 4px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 50px,
-      rgba(45, 45, 45, 0.3) 50px,
-      rgba(45, 45, 45, 0.3) 51px
-    );
+  background: transparent;
 }
 
 /* Pulse Dot Animation */
@@ -196,22 +207,38 @@
   animation: scroll-left 30s linear infinite;
 }
 
-/* Tactical Border */
-.tactical-border {
-  border: 1px solid #2d2d2d;
+/* Task Card Styles - Sticky Note Look */
+.task-strip {
+  background: rgba(28, 28, 28, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  transition: all 0.2s ease;
 }
 
-/* Step Button Interactive */
+.task-strip:hover {
+  background: rgba(38, 38, 38, 0.7);
+  transform: translateX(4px);
+}
+
+/* Step Button Interactive - Smooth & Rounded */
 .step-btn-interactive {
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
 }
 
 .step-btn-interactive:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 6px rgba(0, 255, 136, 0.4);
+  transform: scale(1.15);
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
 }
 
 .step-btn-interactive.active {
-  box-shadow: 0 0 0 2px #00ff88, 0 0 10px rgba(0, 255, 136, 0.5);
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.5), 0 4px 20px rgba(0, 255, 136, 0.3);
+}
+
+/* Avatar Initials */
+.avatar-initials {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 255, 136, 0.05) 100%);
+  border: 1px solid rgba(0, 255, 136, 0.2);
 }

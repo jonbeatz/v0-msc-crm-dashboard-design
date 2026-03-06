@@ -17,56 +17,59 @@ const velocityData = [3, 5, 4, 7, 6, 8, 9]
 
 export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps) {
   return (
-    <header className="flex items-center justify-between border-b border-border bg-card px-6 py-4">
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3">
-          {/* Minimalist MSC Icon */}
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-sm border border-primary/50 bg-background">
-            <Film className="h-4 w-4 text-primary" />
-            <div className="absolute inset-0 blur-md bg-primary/10" />
+    <header className="flex items-center justify-between glass-card border-b border-white/[0.06] px-8 py-5">
+      <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4">
+          {/* Soft MSC Icon */}
+          <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20">
+            <Film className="h-5 w-5 text-primary" />
+            <div className="absolute inset-0 rounded-2xl blur-xl bg-primary/20" />
           </div>
-          <h1 className="font-mono text-lg font-bold tracking-wider text-foreground">
-            <span className="text-primary vader-glow-text">MSC</span>
-            <span className="text-muted-foreground mx-1">//</span>
-            <span className="text-muted-foreground text-sm">VADER-01</span>
-          </h1>
+          <div>
+            <h1 className="text-lg font-semibold tracking-wide text-foreground">
+              <span className="text-primary">MSC</span>
+              <span className="text-muted-foreground mx-2">/</span>
+              <span className="text-muted-foreground">Studio</span>
+            </h1>
+            <p className="text-xs text-muted-foreground">Media Dashboard</p>
+          </div>
         </div>
 
         {/* Project Velocity Sparkline */}
-        <div className="hidden md:flex items-center gap-3 border-l border-border pl-6">
+        <div className="hidden md:flex items-center gap-4 border-l border-white/[0.06] pl-8">
           <div className="flex items-center gap-2">
-            <Activity className="h-3.5 w-3.5 text-primary" />
-            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            <Activity className="h-4 w-4 text-primary" />
+            <span className="text-xs text-muted-foreground">
               Velocity
             </span>
           </div>
-          <Sparkline data={velocityData} width={100} height={24} />
-          <span className="font-mono text-xs text-primary font-semibold">+12%</span>
+          <Sparkline data={velocityData} width={100} height={28} />
+          <span className="text-sm text-primary font-semibold">+12%</span>
         </div>
       </div>
 
       <div className="flex items-center gap-6">
         {/* Global Status Gauge */}
-        <div className="hidden lg:block border-r border-border pr-6">
+        <div className="hidden lg:flex items-center gap-4 border-r border-white/[0.06] pr-6">
           <GlobalStatusGauge percentage={85} label="Studio Capacity" />
         </div>
 
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search clients..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-64 rounded-sm border-border bg-background pl-10 font-mono text-sm placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20"
+            className="w-72 rounded-xl border-white/[0.06] bg-white/[0.03] pl-11 text-sm placeholder:text-muted-foreground focus:border-primary/40 focus:ring-primary/20 focus:bg-white/[0.05]"
           />
         </div>
         <Button
           onClick={onQuickAdd}
-          className="rounded-sm bg-primary text-primary-foreground hover:bg-primary/80 vader-btn-hover font-mono text-sm font-semibold transition-all duration-200"
+          className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 vader-btn-hover px-5 py-2.5 text-sm font-semibold"
         >
           <Plus className="mr-2 h-4 w-4" />
-          Quick Add
+          Add Client
         </Button>
       </div>
     </header>

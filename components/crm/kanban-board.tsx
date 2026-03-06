@@ -18,44 +18,44 @@ export function KanbanBoard({ clients, onClientSelect, recentlyUpdatedId, onStep
   }
 
   return (
-    <div className="flex-1 overflow-x-auto p-4">
-      <div className="flex gap-3 min-w-max">
+    <div className="flex-1 overflow-x-auto p-6">
+      <div className="flex gap-5 min-w-max">
         {PIPELINE_STAGES.map((stage, index) => {
           const stageClients = getClientsForStage(index)
           
           return (
             <div
               key={stage}
-              className="w-64 flex-shrink-0 rounded-sm border border-border bg-card/30"
+              className="w-72 flex-shrink-0 rounded-2xl glass-card overflow-hidden"
             >
               {/* Column Header */}
-              <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
+                <div className="flex items-center gap-3">
                   <div
                     className={cn(
-                      'h-2 w-2 rounded-full',
+                      'h-2.5 w-2.5 rounded-full',
                       index === 5
-                        ? 'bg-primary vader-progress-glow'
+                        ? 'bg-primary breathing-glow'
                         : index === 0
-                        ? 'bg-muted-foreground'
-                        : 'bg-muted-foreground/60'
+                        ? 'bg-muted-foreground/60'
+                        : 'bg-muted-foreground/40'
                     )}
                   />
-                  <h2 className="font-mono text-xs font-semibold uppercase tracking-wider text-foreground">
+                  <h2 className="text-sm font-semibold text-foreground">
                     {stage}
                   </h2>
                 </div>
-                <span className="flex h-5 w-5 items-center justify-center rounded-sm bg-muted font-mono text-xs text-muted-foreground">
+                <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-muted/50 text-xs font-medium text-muted-foreground">
                   {stageClients.length}
                 </span>
               </div>
 
               {/* Column Content */}
-              <div className="flex flex-col gap-2 p-2 min-h-[180px]">
+              <div className="flex flex-col gap-3 p-4 min-h-[200px]">
                 {stageClients.length === 0 ? (
-                  <div className="flex h-20 items-center justify-center rounded-sm border border-dashed border-border/50">
-                    <p className="font-mono text-xs text-muted-foreground">
-                      Empty
+                  <div className="flex h-24 items-center justify-center rounded-xl border border-dashed border-white/[0.06]">
+                    <p className="text-sm text-muted-foreground">
+                      No projects
                     </p>
                   </div>
                 ) : (

@@ -9,8 +9,8 @@ interface CircularProgressProps {
 
 export function CircularProgress({
   percentage,
-  size = 48,
-  strokeWidth = 4,
+  size = 52,
+  strokeWidth = 6,
   showLabel = true,
 }: CircularProgressProps) {
   const radius = (size - strokeWidth) / 2
@@ -24,16 +24,17 @@ export function CircularProgress({
         width={size}
         height={size}
       >
-        {/* Background Track */}
+        {/* Background Track - Thicker & Rounded */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#2d2d2d"
+          stroke="rgba(255, 255, 255, 0.06)"
           strokeWidth={strokeWidth}
+          strokeLinecap="round"
         />
-        {/* Progress Fill */}
+        {/* Progress Fill - Smooth with Soft Glow */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -45,14 +46,14 @@ export function CircularProgress({
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           style={{
-            filter: 'drop-shadow(0 0 4px rgba(0, 255, 136, 0.5))',
-            transition: 'stroke-dashoffset 0.5s ease',
+            filter: 'drop-shadow(0 0 8px rgba(0, 255, 136, 0.4))',
+            transition: 'stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         />
       </svg>
       {showLabel && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-mono text-xs font-bold text-primary">
+          <span className="text-xs font-semibold text-primary">
             {percentage}%
           </span>
         </div>
