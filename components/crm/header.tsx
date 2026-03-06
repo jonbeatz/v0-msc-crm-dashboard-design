@@ -1,10 +1,12 @@
 'use client'
 
-import { Search, Plus, Film, Activity } from 'lucide-react'
+import { useState } from 'react'
+import { Search, Plus, Film, Activity, Monitor, BarChart3 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Sparkline } from '@/components/crm/sparkline'
 import { GlobalStatusGauge } from '@/components/crm/global-status-gauge'
+import { cn } from '@/lib/utils'
 
 interface HeaderProps {
   searchQuery: string
@@ -16,6 +18,8 @@ interface HeaderProps {
 const velocityData = [3, 5, 4, 7, 6, 8, 9]
 
 export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps) {
+  const [viewMode, setViewMode] = useState<'technical' | 'executive'>('technical')
+
   return (
     <header className="flex items-center justify-between glass-card border-b border-white/[0.06] px-8 py-5">
       <div className="flex items-center gap-8">
@@ -49,6 +53,36 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd }: HeaderProps)
       </div>
 
       <div className="flex items-center gap-6">
+        {/* View Mode Toggle */}
+        <div className="hidden md:flex items-center gap-2 border-r border-white/[0.06] pr-6">
+          <div className="flex items-center rounded-xl glass-card p-1">
+            <button
+              onClick={() => setViewMode('technical')}
+              className={cn(
+                'flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200',
+                viewMode === 'technical'
+                  ? 'bg-primary/20 text-primary'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              <Monitor className="h-3.5 w-3.5" />
+              Technical
+            </button>
+            <button
+              onClick={() => setViewMode('executive')}
+              className={cn(
+                'flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200',
+                viewMode === 'executive'
+                  ? 'bg-primary/20 text-primary'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              <BarChart3 className="h-3.5 w-3.5" />
+              Executive
+            </button>
+          </div>
+        </div>
+
         {/* Global Status Gauge */}
         <div className="hidden lg:flex items-center gap-4 border-r border-white/[0.06] pr-6">
           <GlobalStatusGauge percentage={85} label="Studio Capacity" />

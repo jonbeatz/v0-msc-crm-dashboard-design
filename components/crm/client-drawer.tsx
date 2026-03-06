@@ -125,8 +125,8 @@ export function ClientDrawer({
               )}
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-semibold text-foreground">{client.name}</h2>
-              <p className="font-mono text-xs text-muted-foreground mt-1">
+              <h2 className="text-xl font-bold text-foreground">{client.name}</h2>
+              <p className="font-mono text-[11px] text-muted-foreground/70 mt-1">
                 {client.projectId}
               </p>
               {/* Status Badges */}
@@ -263,7 +263,7 @@ export function ClientDrawer({
                     <User className="h-3.5 w-3.5" />
                     Username
                   </label>
-                  <div className="rounded-xl bg-muted/30 px-4 py-3 text-sm text-foreground font-mono">
+                  <div className="rounded-xl bg-muted/30 px-4 py-3 text-sm vault-text">
                     {client.loginUser || '—'}
                   </div>
                 </div>
@@ -274,7 +274,7 @@ export function ClientDrawer({
                     Password
                   </label>
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 rounded-xl bg-muted/30 px-4 py-3 text-sm font-mono tracking-widest">
+                    <div className="flex-1 rounded-xl bg-muted/30 px-4 py-3 text-sm vault-text tracking-widest">
                       {client.password
                         ? showPassword
                           ? client.password
