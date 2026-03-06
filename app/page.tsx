@@ -11,7 +11,7 @@ import { StudioOperations } from '@/components/crm/studio-operations'
 import { QuickCommandBar } from '@/components/crm/quick-command-bar'
 import { StatusBar } from '@/components/crm/status-bar'
 import { TacticalActionCenter } from '@/components/crm/tactical-action-center'
-import { ScheduleCalendar } from '@/components/crm/schedule-calendar'
+import { CalendarModal } from '@/components/crm/calendar-modal'
 import { mockClients, mockActivities, mockTasks, type Client, type Task } from '@/lib/crm-data'
 
 export default function CRMDashboard() {
@@ -24,6 +24,7 @@ export default function CRMDashboard() {
   const [searchQuery, setSearchQuery] = useState('')
   const [recentlyUpdatedId, setRecentlyUpdatedId] = useState<string | undefined>(undefined)
   const [stepFilter, setStepFilter] = useState<{ clientId: string; stepIndex: number } | null>(null)
+  const [calendarOpen, setCalendarOpen] = useState(false)
 
   const filteredClients = useMemo(() => {
     if (!searchQuery.trim()) return clients
@@ -99,6 +100,7 @@ export default function CRMDashboard() {
         onQuickAdd={() => setAddDialogOpen(true)}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
+        onOpenCalendar={() => setCalendarOpen(true)}
       />
 
       {viewMode === 'technical' ? (
@@ -116,19 +118,13 @@ export default function CRMDashboard() {
           {/* Slide-out Activity Feed */}
           <ActivityFeed activities={mockActivities} />
 
-          {/* Tactical Action Center & Calendar Grid */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mx-6 mb-6">
-            <TacticalActionCenter
-              tasks={tasks}
-              selectedStepFilter={stepFilter}
-              onToggleTask={handleToggleTask}
-              onAddTask={handleAddTask}
-            />
-            <ScheduleCalendar
-              tasks={tasks}
-              clients={clients}
-            />
-          </div>
+          {/* Tactical Action Center (To-Do HUD) */}
+          <TacticalActionCenter
+            tasks={tasks}
+            selectedStepFilter={stepFilter}
+            onToggleTask={handleToggleTask}
+            onAddTask={handleAddTask}
+          />
 
           {/* Studio Operations Section */}
           <StudioOperations />
@@ -151,6 +147,13 @@ export default function CRMDashboard() {
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         onAddClient={handleAddClient}
+      />
+
+      <CalendarModal
+        open={calendarOpen}
+        onOpenChange={setCalendarOpen}
+        tasks={tasks}
+        clients={clients}
       />
     </div>
   )

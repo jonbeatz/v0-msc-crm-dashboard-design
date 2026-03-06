@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, Plus, Film, Activity, Monitor, BarChart3 } from 'lucide-react'
+import { Search, Plus, Film, Activity, Monitor, BarChart3, CalendarDays } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Sparkline } from '@/components/crm/sparkline'
@@ -15,12 +15,13 @@ interface HeaderProps {
   onQuickAdd: () => void
   viewMode: ViewMode
   onViewModeChange: (mode: ViewMode) => void
+  onOpenCalendar: () => void
 }
 
 // Mock velocity data for last 7 days
 const velocityData = [3, 5, 4, 7, 6, 8, 9]
 
-export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onViewModeChange }: HeaderProps) {
+export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onViewModeChange, onOpenCalendar }: HeaderProps) {
 
   return (
     <header className="flex items-center justify-between glass-card border-b border-white/[0.06] px-8 py-5">
@@ -91,6 +92,15 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onVi
         <div className="hidden lg:flex items-center gap-4 border-r border-white/[0.06] pr-6">
           <GlobalStatusGauge percentage={85} label="Studio Capacity" />
         </div>
+
+        {/* Calendar Button */}
+        <Button
+          onClick={onOpenCalendar}
+          variant="outline"
+          className="rounded-xl border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] hover:border-primary/40 px-3 py-2.5"
+        >
+          <CalendarDays className="h-4 w-4 text-primary" />
+        </Button>
 
         <div className="relative">
           <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
