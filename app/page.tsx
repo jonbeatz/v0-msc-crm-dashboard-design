@@ -27,13 +27,25 @@ export default function CRMDashboard() {
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [selectedProjectId, setSelectedProjectId] = useState('all')
 
-  const filteredClients = useMemo(() => {
-    let filtered = clients
-    
-    // Filter by selected project (skip if 'all' is selected)
+  // Filter clients by project
+  const projectFilteredClients = useMemo(() => {
     if (selectedProjectId && selectedProjectId !== 'all') {
-      filtered = filtered.filter(client => client.projectId === selectedProjectId)
+      return clients.filter(client => client.projectId === selectedProjectId)
     }
+    return clients
+  }, [clients, selectedProjectId])
+
+  // Filter tasks by project (based on clientId matching filtered clients)
+  const projectFilteredTasks = useMemo(() => {
+    if (selectedProjectId && selectedProjectId !== 'all') {
+      const clientIds = projectFilteredClients.map(c => c.id)
+      return tasks.filter(task => clientIds.includes(task.clientId) || task.clientId === '')
+    }
+    return tasks
+  }, [tasks, selectedProjectId, projectFilteredClients])
+
+  const filteredClients = useMemo(() => {
+    let filtered = projectFilteredClients
     
     // Filter by search query
     if (searchQuery.trim()) {
@@ -46,7 +58,7 @@ export default function CRMDashboard() {
     }
     
     return filtered
-  }, [clients, searchQuery, selectedProjectId])
+  }, [projectFilteredClients, searchQuery])
 
   const handleClientSelect = (client: Client) => {
     setSelectedClient(client)
@@ -159,7 +171,7 @@ export default function CRMDashboard() {
           <QuickCommandBar />
         </>
       ) : (
-        <ExecutiveSummary clients={clients} tasks={tasks} />
+        <ExecutiveSummary clients={projectFilteredClients} tasks={projectFilteredTasks} />
       )}
 
       <ClientDrawer
