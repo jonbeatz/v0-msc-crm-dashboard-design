@@ -46,13 +46,13 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
         </div>
       </Button>
 
-      {/* Slide-out Panel */}
+      {/* Slide-out Panel - Solid Background */}
       <aside
         className={cn(
           "fixed right-0 top-0 bottom-0 w-80 z-30",
-          "glass-card border-l border-white/[0.06]",
+          "bg-[#1c1c1c] border-l border-white/[0.08]",
           "transform transition-transform duration-300 ease-in-out",
-          "flex flex-col",
+          "flex flex-col shadow-2xl shadow-black/50",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
