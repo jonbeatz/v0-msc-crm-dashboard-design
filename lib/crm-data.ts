@@ -20,6 +20,17 @@ export interface Activity {
   timestamp: Date
 }
 
+export interface Task {
+  id: string
+  name: string
+  clientId: string
+  clientName: string
+  stepIndex: number
+  dueAt: Date
+  assignedToMe: boolean
+  completed: boolean
+}
+
 export const PIPELINE_STAGES = [
   'Prep',
   'Step 1: Domain',
@@ -116,6 +127,80 @@ export const mockClients: Client[] = [
     password: '••••••••••••',
     priority: 'normal',
   },
+]
+
+export const mockTasks: Task[] = [
+  {
+    id: 't1',
+    name: 'Configure Hosting',
+    clientId: '1',
+    clientName: 'Antwuan Smith',
+    stepIndex: 2,
+    dueAt: new Date(Date.now() + 1000 * 60 * 120), // 2h from now
+    assignedToMe: true,
+    completed: false,
+  },
+  {
+    id: 't2',
+    name: 'Install Theme',
+    clientId: '1',
+    clientName: 'Antwuan Smith',
+    stepIndex: 3,
+    dueAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24h from now
+    assignedToMe: true,
+    completed: false,
+  },
+  {
+    id: 't3',
+    name: 'Setup Domain DNS',
+    clientId: '2',
+    clientName: 'Marcus Johnson',
+    stepIndex: 0,
+    dueAt: new Date(Date.now() - 1000 * 60 * 30), // 30min overdue
+    assignedToMe: true,
+    completed: false,
+  },
+  {
+    id: 't4',
+    name: 'Send Collab Invite',
+    clientId: '6',
+    clientName: 'Tyrone Mitchell',
+    stepIndex: 2,
+    dueAt: new Date(Date.now() + 1000 * 60 * 45), // 45min from now
+    assignedToMe: false,
+    completed: false,
+  },
+  {
+    id: 't5',
+    name: 'Enable Coming Soon',
+    clientId: '3',
+    clientName: 'Keisha Williams',
+    stepIndex: 4,
+    dueAt: new Date(Date.now() + 1000 * 60 * 180), // 3h from now
+    assignedToMe: true,
+    completed: false,
+  },
+  {
+    id: 't6',
+    name: 'Verify SSL Certificate',
+    clientId: '5',
+    clientName: 'Jasmine Lee',
+    stepIndex: 1,
+    dueAt: new Date(Date.now() + 1000 * 60 * 60 * 48), // 2 days from now
+    assignedToMe: false,
+    completed: true,
+  },
+]
+
+export const systemLogs: string[] = [
+  '[SYS] Hosting node online — latency 12ms',
+  '[MSC] Project msc_indie_01 synced to CDN',
+  '[SEC] SSL renewal queued for keishawilliams.com',
+  '[SYS] Database backup complete — 2.4GB archived',
+  '[MSC] FluentCRM automation triggered for lead capture',
+  '[NET] DNS propagation verified for antwuansmith.com',
+  '[SYS] Storage threshold at 67% capacity',
+  '[MSC] Theme update available for flavor starter pack',
 ]
 
 export const mockActivities: Activity[] = [

@@ -181,3 +181,37 @@
   transition: width 0.5s ease;
   box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
 }
+
+/* System Log Scrolling Animation */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.system-log-scroll {
+  animation: scroll-left 30s linear infinite;
+}
+
+/* Tactical Border */
+.tactical-border {
+  border: 1px solid #2d2d2d;
+}
+
+/* Step Button Interactive */
+.step-btn-interactive {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.step-btn-interactive:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 6px rgba(0, 255, 136, 0.4);
+}
+
+.step-btn-interactive.active {
+  box-shadow: 0 0 0 2px #00ff88, 0 0 10px rgba(0, 255, 136, 0.5);
+}

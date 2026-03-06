@@ -8,9 +8,11 @@ interface KanbanBoardProps {
   clients: Client[]
   onClientSelect: (client: Client) => void
   recentlyUpdatedId?: string
+  onStepClick?: (clientId: string, stepIndex: number) => void
+  activeStepFilter?: { clientId: string; stepIndex: number } | null
 }
 
-export function KanbanBoard({ clients, onClientSelect, recentlyUpdatedId }: KanbanBoardProps) {
+export function KanbanBoard({ clients, onClientSelect, recentlyUpdatedId, onStepClick, activeStepFilter }: KanbanBoardProps) {
   const getClientsForStage = (stageIndex: number) => {
     return clients.filter((client) => client.currentStep === stageIndex)
   }
@@ -63,6 +65,8 @@ export function KanbanBoard({ clients, onClientSelect, recentlyUpdatedId }: Kanb
                       client={client}
                       onClick={() => onClientSelect(client)}
                       isRecentlyUpdated={client.id === recentlyUpdatedId}
+                      onStepClick={onStepClick}
+                      activeStepFilter={activeStepFilter}
                     />
                   ))
                 )}

@@ -9,9 +9,11 @@ interface ClientCardProps {
   client: Client
   onClick: () => void
   isRecentlyUpdated?: boolean
+  onStepClick?: (clientId: string, stepIndex: number) => void
+  activeStepFilter?: { clientId: string; stepIndex: number } | null
 }
 
-export function ClientCard({ client, onClick, isRecentlyUpdated }: ClientCardProps) {
+export function ClientCard({ client, onClick, isRecentlyUpdated, onStepClick, activeStepFilter }: ClientCardProps) {
   const completedCount = client.completedSteps.filter(Boolean).length
   const percentage = Math.round((completedCount / 5) * 100)
   const hasOverdueStep = client.priority === 'high' && completedCount < 5
@@ -69,21 +71,30 @@ export function ClientCard({ client, onClick, isRecentlyUpdated }: ClientCardPro
 
       {/* Tactical Step Indicator Row */}
       <div className="mt-3 flex items-center gap-1">
-        {client.completedSteps.map((completed, index) => (
-          <div
-            key={index}
-            className={cn(
-              'flex h-5 w-5 items-center justify-center rounded-sm font-mono text-[10px] font-bold transition-all duration-200',
-              completed
-                ? 'bg-primary text-primary-foreground'
-                : hasOverdueStep && index === completedCount
-                  ? 'bg-destructive/20 text-destructive border border-destructive/40 vader-critical-pulse'
-                  : 'bg-muted/50 text-muted-foreground border border-border'
-            )}
-          >
-            {index + 1}
-          </div>
-        ))}
+        {client.completedSteps.map((completed, index) => {
+          const isActive = activeStepFilter?.clientId === client.id && activeStepFilter?.stepIndex === index
+          return (
+            <button
+              key={index}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onStepClick?.(client.id, index)
+              }}
+              className={cn(
+                'flex h-5 w-5 items-center justify-center rounded-sm font-mono text-[10px] font-bold step-btn-interactive',
+                completed
+                  ? 'bg-primary text-primary-foreground'
+                  : hasOverdueStep && index === completedCount
+                    ? 'bg-destructive/20 text-destructive border border-destructive/40 vader-critical-pulse'
+                    : 'bg-muted/50 text-muted-foreground border border-border',
+                isActive && 'active'
+              )}
+            >
+              {index + 1}
+            </button>
+          )
+        })}
       </div>
     </button>
   )

@@ -8,15 +8,19 @@ import { ActivityFeed } from '@/components/crm/activity-feed'
 import { AddClientDialog } from '@/components/crm/add-client-dialog'
 import { StudioOperations } from '@/components/crm/studio-operations'
 import { QuickCommandBar } from '@/components/crm/quick-command-bar'
-import { mockClients, mockActivities, type Client } from '@/lib/crm-data'
+import { SystemLog } from '@/components/crm/system-log'
+import { TacticalActionCenter } from '@/components/crm/tactical-action-center'
+import { mockClients, mockActivities, mockTasks, type Client, type Task } from '@/lib/crm-data'
 
 export default function CRMDashboard() {
   const [clients, setClients] = useState<Client[]>(mockClients)
+  const [tasks, setTasks] = useState<Task[]>(mockTasks)
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [recentlyUpdatedId, setRecentlyUpdatedId] = useState<string | undefined>(undefined)
+  const [stepFilter, setStepFilter] = useState<{ clientId: string; stepIndex: number } | null>(null)
 
   const filteredClients = useMemo(() => {
     if (!searchQuery.trim()) return clients
@@ -47,8 +51,40 @@ export default function CRMDashboard() {
     setRecentlyUpdatedId(newClient.id)
   }
 
+  const handleStepClick = (clientId: string, stepIndex: number) => {
+    // Toggle filter: if same step clicked, clear filter
+    if (stepFilter?.clientId === clientId && stepFilter?.stepIndex === stepIndex) {
+      setStepFilter(null)
+    } else {
+      setStepFilter({ clientId, stepIndex })
+    }
+  }
+
+  const handleToggleTask = (taskId: string) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t))
+    )
+  }
+
+  const handleAddTask = (taskName: string) => {
+    const newTask: Task = {
+      id: `t${Date.now()}`,
+      name: taskName,
+      clientId: '',
+      clientName: 'Unassigned',
+      stepIndex: 0,
+      dueAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+      assignedToMe: true,
+      completed: false,
+    }
+    setTasks((prev) => [...prev, newTask])
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background pb-14">
+      {/* System Log Strip */}
+      <SystemLog />
+
       <Header
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -60,9 +96,19 @@ export default function CRMDashboard() {
           clients={filteredClients}
           onClientSelect={handleClientSelect}
           recentlyUpdatedId={recentlyUpdatedId}
+          onStepClick={handleStepClick}
+          activeStepFilter={stepFilter}
         />
         <ActivityFeed activities={mockActivities} />
       </div>
+
+      {/* Tactical Action Center (To-Do HUD) */}
+      <TacticalActionCenter
+        tasks={tasks}
+        selectedStepFilter={stepFilter}
+        onToggleTask={handleToggleTask}
+        onAddTask={handleAddTask}
+      />
 
       {/* Studio Operations Section */}
       <StudioOperations />
