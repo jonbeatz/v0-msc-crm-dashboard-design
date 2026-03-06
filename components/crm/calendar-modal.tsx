@@ -3,6 +3,9 @@
 import { useState, useMemo } from 'react'
 import { X, CalendarDays, ChevronLeft, ChevronRight, Clock, User, AlertTriangle, Plus, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { TASK_STEPS, type Task, type Client } from '@/lib/crm-data'
 
@@ -13,6 +16,7 @@ interface CalendarModalProps {
   onOpenChange: (open: boolean) => void
   tasks: Task[]
   clients: Client[]
+  onAddEvent?: (event: { name: string; clientId: string; clientName: string; stepIndex: number; dueAt: Date }) => void
 }
 
 interface CalendarEvent {
@@ -27,10 +31,15 @@ interface CalendarEvent {
   task?: Task
 }
 
-export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarModalProps) {
+export function CalendarModal({ open, onOpenChange, tasks, clients, onAddEvent }: CalendarModalProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [newEventName, setNewEventName] = useState('')
+  const [newEventClientId, setNewEventClientId] = useState('')
+  const [newEventStep, setNewEventStep] = useState(0)
+  const [newEventTime, setNewEventTime] = useState('12:00')
 
   // Generate calendar events from tasks and client deadlines
   const calendarEvents = useMemo(() => {
@@ -158,6 +167,31 @@ export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarMo
     setCurrentMonth(next)
   }
 
+  const handleAddEvent = () => {
+    if (!newEventName.trim() || !selectedDate || !onAddEvent) return
+
+    const client = clients.find(c => c.id === newEventClientId)
+    const [hours, minutes] = newEventTime.split(':').map(Number)
+    
+    const dueAt = new Date(selectedDate)
+    dueAt.setHours(hours, minutes, 0, 0)
+
+    onAddEvent({
+      name: newEventName.trim(),
+      clientId: newEventClientId || '',
+      clientName: client?.name || 'Unassigned',
+      stepIndex: newEventStep,
+      dueAt,
+    })
+
+    // Reset form
+    setNewEventName('')
+    setNewEventClientId('')
+    setNewEventStep(0)
+    setNewEventTime('12:00')
+    setShowAddForm(false)
+  }
+
   // Generate calendar days for current month view
   const calendarDays = useMemo(() => {
     const year = currentMonth.getFullYear()
@@ -255,6 +289,7 @@ export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarMo
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => setShowAddForm(true)}
                 className="rounded-xl border-white/[0.08] hover:bg-white/[0.04]"
               >
                 <Plus className="h-4 w-4 mr-2" />
@@ -508,7 +543,7 @@ export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarMo
           </div>
 
           {/* Event Detail Panel (shows when event is selected) */}
-          {selectedEvent && (
+          {selectedEvent && !showAddForm && (
             <div className="border-t border-white/[0.06] p-6 flex-shrink-0">
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
@@ -563,6 +598,105 @@ export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarMo
                       {selectedEvent.status === 'completed' ? 'Mark Incomplete' : 'Mark Complete'}
                     </Button>
                   )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Add Event Form Panel */}
+          {showAddForm && (
+            <div className="border-t border-white/[0.06] p-6 flex-shrink-0">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-foreground">Add New Event</h3>
+                <button
+                  onClick={() => setShowAddForm(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-white/[0.06] transition-colors"
+                >
+                  <X className="h-4 w-4 text-muted-foreground" />
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Event Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="eventName" className="text-sm text-muted-foreground">Event Name</Label>
+                  <Input
+                    id="eventName"
+                    value={newEventName}
+                    onChange={(e) => setNewEventName(e.target.value)}
+                    placeholder="Enter event name..."
+                    className="rounded-xl border-white/[0.08] bg-white/[0.03] focus:border-primary/40"
+                  />
+                </div>
+
+                {/* Client */}
+                <div className="space-y-2">
+                  <Label htmlFor="eventClient" className="text-sm text-muted-foreground">Client</Label>
+                  <Select value={newEventClientId} onValueChange={setNewEventClientId}>
+                    <SelectTrigger className="rounded-xl border-white/[0.08] bg-white/[0.03]">
+                      <SelectValue placeholder="Select client..." />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="unassigned">Unassigned</SelectItem>
+                      {clients.map((client) => (
+                        <SelectItem key={client.id} value={client.id}>
+                          {client.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Step */}
+                <div className="space-y-2">
+                  <Label htmlFor="eventStep" className="text-sm text-muted-foreground">Step</Label>
+                  <Select value={String(newEventStep)} onValueChange={(v) => setNewEventStep(Number(v))}>
+                    <SelectTrigger className="rounded-xl border-white/[0.08] bg-white/[0.03]">
+                      <SelectValue placeholder="Select step..." />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      {TASK_STEPS.map((step, index) => (
+                        <SelectItem key={index} value={String(index)}>
+                          {step}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Time */}
+                <div className="space-y-2">
+                  <Label htmlFor="eventTime" className="text-sm text-muted-foreground">Time</Label>
+                  <Input
+                    id="eventTime"
+                    type="time"
+                    value={newEventTime}
+                    onChange={(e) => setNewEventTime(e.target.value)}
+                    className="rounded-xl border-white/[0.08] bg-white/[0.03] focus:border-primary/40"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/[0.06]">
+                <p className="text-sm text-muted-foreground">
+                  Adding to: <span className="text-foreground font-medium">{selectedDate ? formatDateHeader(selectedDate) : 'No date selected'}</span>
+                </p>
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowAddForm(false)}
+                    className="rounded-xl border-white/[0.08] hover:bg-white/[0.04]"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleAddEvent}
+                    disabled={!newEventName.trim() || !selectedDate}
+                    className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/80"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Event
+                  </Button>
                 </div>
               </div>
             </div>

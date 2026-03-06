@@ -154,6 +154,19 @@ export default function CRMDashboard() {
         onOpenChange={setCalendarOpen}
         tasks={tasks}
         clients={clients}
+        onAddEvent={(event) => {
+          const newTask: Task = {
+            id: `t${Date.now()}`,
+            name: event.name,
+            clientId: event.clientId,
+            clientName: event.clientName,
+            stepIndex: event.stepIndex,
+            dueAt: event.dueAt,
+            assignedToMe: true,
+            completed: false,
+          }
+          setTasks((prev) => [...prev, newTask])
+        }}
       />
     </div>
   )
