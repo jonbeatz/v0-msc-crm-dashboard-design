@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { X, CalendarDays, ChevronLeft, ChevronRight, Clock, User, AlertTriangle, Plus, Tag } from 'lucide-react'
-import { Calendar } from '@/components/ui/calendar'
+import { X, CalendarDays, ChevronLeft, ChevronRight, Clock, User, AlertTriangle, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { TASK_STEPS, type Task, type Client } from '@/lib/crm-data'
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 interface CalendarModalProps {
   open: boolean
@@ -157,6 +158,70 @@ export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarMo
     setCurrentMonth(next)
   }
 
+  // Generate calendar days for current month view
+  const calendarDays = useMemo(() => {
+    const year = currentMonth.getFullYear()
+    const month = currentMonth.getMonth()
+    
+    // First day of month
+    const firstDay = new Date(year, month, 1)
+    const startingDayOfWeek = firstDay.getDay()
+    
+    // Last day of month
+    const lastDay = new Date(year, month + 1, 0)
+    const totalDays = lastDay.getDate()
+    
+    // Days from previous month
+    const prevMonthLastDay = new Date(year, month, 0).getDate()
+    
+    const days: { date: Date; isCurrentMonth: boolean }[] = []
+    
+    // Add previous month days
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+      days.push({
+        date: new Date(year, month - 1, prevMonthLastDay - i),
+        isCurrentMonth: false,
+      })
+    }
+    
+    // Add current month days
+    for (let i = 1; i <= totalDays; i++) {
+      days.push({
+        date: new Date(year, month, i),
+        isCurrentMonth: true,
+      })
+    }
+    
+    // Add next month days to fill grid (6 rows x 7 days = 42)
+    const remainingDays = 42 - days.length
+    for (let i = 1; i <= remainingDays; i++) {
+      days.push({
+        date: new Date(year, month + 1, i),
+        isCurrentMonth: false,
+      })
+    }
+    
+    return days
+  }, [currentMonth])
+
+  const isToday = (date: Date) => {
+    const today = new Date()
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    )
+  }
+
+  const isSelected = (date: Date) => {
+    if (!selectedDate) return false
+    return (
+      date.getDate() === selectedDate.getDate() &&
+      date.getMonth() === selectedDate.getMonth() &&
+      date.getFullYear() === selectedDate.getFullYear()
+    )
+  }
+
   if (!open) return null
 
   return (
@@ -228,56 +293,44 @@ export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarMo
                   </button>
                 </div>
 
-                {/* Calendar Grid */}
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  month={currentMonth}
-                  onMonthChange={setCurrentMonth}
-                  className="w-full"
-                  classNames={{
-                    months: "w-full",
-                    month: "w-full",
-                    table: "w-full border-separate border-spacing-2",
-                    head_row: "flex w-full",
-                    head_cell: "text-muted-foreground rounded-md flex-1 font-medium text-sm py-3",
-                    row: "flex w-full",
-                    cell: cn(
-                      "relative flex-1 p-1 text-center focus-within:relative focus-within:z-20",
-                      "[&:has([aria-selected])]:bg-primary/10 [&:has([aria-selected])]:rounded-xl"
-                    ),
-                    day: cn(
-                      "h-16 w-full p-0 font-normal text-sm",
-                      "hover:bg-white/[0.06] rounded-xl transition-colors",
-                      "aria-selected:bg-primary aria-selected:text-primary-foreground"
-                    ),
-                    day_today: "bg-accent/20 text-accent",
-                    day_outside: "text-muted-foreground opacity-50",
-                    day_disabled: "text-muted-foreground opacity-50",
-                    day_hidden: "invisible",
-                    nav: "hidden",
-                    caption: "hidden",
-                  }}
-                  components={{
-                    DayButton: ({ day, modifiers, ...props }) => {
-                      const dateKey = day.date.toDateString()
+                {/* Custom Calendar Grid */}
+                <div className="w-full">
+                  {/* Weekday Headers */}
+                  <div className="grid grid-cols-7 gap-2 mb-3">
+                    {WEEKDAYS.map((day) => (
+                      <div
+                        key={day}
+                        className="text-center text-sm font-medium text-muted-foreground py-2"
+                      >
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Days Grid */}
+                  <div className="grid grid-cols-7 gap-2">
+                    {calendarDays.map(({ date, isCurrentMonth }, index) => {
+                      const dateKey = date.toDateString()
                       const eventInfo = eventDates[dateKey]
-                      
+                      const selected = isSelected(date)
+                      const today = isToday(date)
+
                       return (
-<button
-                                          {...props}
-                                          className={cn(
-                                            "relative h-16 w-full p-0 font-normal rounded-xl transition-all text-sm",
-                                            "hover:bg-white/[0.06]",
-                                            modifiers.selected && "bg-primary text-primary-foreground hover:bg-primary/80",
-                                            modifiers.today && !modifiers.selected && "bg-accent/20 text-accent",
-                                            modifiers.outside && "text-muted-foreground opacity-50"
-                                          )}
-                                        >
-                          {day.date.getDate()}
+                        <button
+                          key={index}
+                          onClick={() => setSelectedDate(date)}
+                          className={cn(
+                            "relative aspect-square flex flex-col items-center justify-center rounded-xl transition-all text-sm",
+                            "hover:bg-white/[0.06]",
+                            !isCurrentMonth && "text-muted-foreground/40",
+                            isCurrentMonth && "text-foreground",
+                            selected && "bg-primary text-primary-foreground hover:bg-primary/80",
+                            today && !selected && "bg-primary/15 text-primary ring-1 ring-primary/30"
+                          )}
+                        >
+                          <span className="font-medium">{date.getDate()}</span>
                           {eventInfo && (
-                            <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 flex gap-1">
+                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
                               {Array.from({ length: Math.min(eventInfo.count, 3) }).map((_, i) => (
                                 <span
                                   key={i}
@@ -296,9 +349,9 @@ export function CalendarModal({ open, onOpenChange, tasks, clients }: CalendarMo
                           )}
                         </button>
                       )
-                    }
-                  }}
-                />
+                    })}
+                  </div>
+                </div>
               </div>
 
               {/* Events List Section - 2 columns */}
