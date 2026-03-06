@@ -30,6 +30,7 @@ interface CalendarEvent {
   priority?: 'normal' | 'high'
   stepIndex?: number
   task?: Task
+  description?: string
 }
 
 export function CalendarModal({ open, onOpenChange, tasks, clients, onAddEvent }: CalendarModalProps) {
@@ -58,6 +59,7 @@ export function CalendarModal({ open, onOpenChange, tasks, clients, onAddEvent }
         status: task.completed ? 'completed' : isOverdue ? 'overdue' : 'upcoming',
         stepIndex: task.stepIndex,
         task,
+        description: task.description,
       }
     })
 
@@ -495,6 +497,13 @@ export function CalendarModal({ open, onOpenChange, tasks, clients, onAddEvent }
                             </span>
                           )}
                         </div>
+
+                        {/* Description Preview */}
+                        {event.description && (
+                          <p className="text-xs text-muted-foreground mt-2 ml-7 line-clamp-2">
+                            {event.description}
+                          </p>
+                        )}
                       </div>
                     ))
                   )}
@@ -583,6 +592,13 @@ export function CalendarModal({ open, onOpenChange, tasks, clients, onAddEvent }
                         {selectedEvent.status.charAt(0).toUpperCase() + selectedEvent.status.slice(1)}
                       </span>
                     </div>
+                    {/* Description / Notes */}
+                    {selectedEvent.description && (
+                      <div className="mt-3 p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                        <p className="text-xs text-muted-foreground mb-1 font-medium">Notes / Instructions</p>
+                        <p className="text-sm text-foreground whitespace-pre-wrap">{selectedEvent.description}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
