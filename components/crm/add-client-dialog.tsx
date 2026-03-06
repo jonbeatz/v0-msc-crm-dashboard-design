@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Link2, AlertTriangle, Film, Folder } from 'lucide-react'
+import { User, Link2, AlertTriangle, Film, Folder, Plus } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -22,6 +22,7 @@ interface AddClientDialogProps {
   onAddClient: (client: Client) => void
   projects: Project[]
   selectedProjectId: string
+  onAddProject: (project: Project) => void
 }
 
 export function AddClientDialog({
@@ -30,14 +31,33 @@ export function AddClientDialog({
   onAddClient,
   projects,
   selectedProjectId,
+  onAddProject,
 }: AddClientDialogProps) {
   const [name, setName] = useState('')
   const [projectId, setProjectId] = useState(selectedProjectId !== 'all' ? selectedProjectId : '')
   const [wpLoginUrl, setWpLoginUrl] = useState('')
   const [highPriority, setHighPriority] = useState(false)
+  const [showNewProject, setShowNewProject] = useState(false)
+  const [newProjectName, setNewProjectName] = useState('')
 
   // Update project selection when the dialog opens with a different selected project
   const activeProjects = projects.filter(p => p.status === 'active')
+
+  const handleCreateProject = () => {
+    if (!newProjectName.trim()) return
+    
+    const newProject: Project = {
+      id: `proj_${Date.now()}`,
+      name: newProjectName.trim(),
+      clientCount: 0,
+      status: 'active',
+    }
+    
+    onAddProject(newProject)
+    setProjectId(newProject.id)
+    setNewProjectName('')
+    setShowNewProject(false)
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -101,18 +121,63 @@ export function AddClientDialog({
               <Folder className="h-3.5 w-3.5" />
               Project
             </Label>
-            <Select value={projectId} onValueChange={setProjectId}>
-              <SelectTrigger className="rounded-xl border-white/[0.06] bg-white/[0.03] text-sm focus:border-primary/40 focus:bg-white/[0.05]">
-                <SelectValue placeholder="Select a project..." />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                {activeProjects.map((project) => (
-                  <SelectItem key={project.id} value={project.id}>
-                    {project.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {showNewProject ? (
+              <div className="flex gap-2">
+                <Input
+                  value={newProjectName}
+                  onChange={(e) => setNewProjectName(e.target.value)}
+                  placeholder="New project name..."
+                  className="rounded-xl border-white/[0.06] bg-white/[0.03] text-sm placeholder:text-muted-foreground focus:border-primary/40 focus:bg-white/[0.05]"
+                  autoFocus
+                />
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleCreateProject}
+                  disabled={!newProjectName.trim()}
+                  className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 px-3"
+                >
+                  Add
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setShowNewProject(false)
+                    setNewProjectName('')
+                  }}
+                  className="rounded-xl border-white/[0.06] px-3"
+                >
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Select value={projectId} onValueChange={setProjectId}>
+                  <SelectTrigger className="rounded-xl border-white/[0.06] bg-white/[0.03] text-sm focus:border-primary/40 focus:bg-white/[0.05]">
+                    <SelectValue placeholder="Select a project..." />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    {activeProjects.map((project) => (
+                      <SelectItem key={project.id} value={project.id}>
+                        {project.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowNewProject(true)}
+                  className="rounded-xl border-white/[0.06] px-3 hover:border-primary/40"
+                  title="Create new project"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">

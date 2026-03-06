@@ -12,11 +12,14 @@ import { QuickCommandBar } from '@/components/crm/quick-command-bar'
 import { StatusBar } from '@/components/crm/status-bar'
 import { TacticalActionCenter } from '@/components/crm/tactical-action-center'
 import { CalendarModal } from '@/components/crm/calendar-modal'
-import { mockClients, mockActivities, mockTasks, mockProjects, type Client, type Task } from '@/lib/crm-data'
+import { AddProjectDialog } from '@/components/crm/add-project-dialog'
+import { mockClients, mockActivities, mockTasks, mockProjects, type Client, type Task, type Project } from '@/lib/crm-data'
 
 export default function CRMDashboard() {
   const [clients, setClients] = useState<Client[]>(mockClients)
   const [tasks, setTasks] = useState<Task[]>(mockTasks)
+  const [projects, setProjects] = useState<Project[]>(mockProjects)
+  const [addProjectDialogOpen, setAddProjectDialogOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('technical')
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -76,6 +79,16 @@ export default function CRMDashboard() {
   const handleAddClient = (newClient: Client) => {
     setClients((prev) => [...prev, newClient])
     setRecentlyUpdatedId(newClient.id)
+    // Update project client count
+    setProjects((prev) =>
+      prev.map((p) =>
+        p.id === newClient.projectId ? { ...p, clientCount: p.clientCount + 1 } : p
+      )
+    )
+  }
+
+  const handleAddProject = (newProject: Project) => {
+    setProjects((prev) => [...prev, newProject])
   }
 
   const handleStepClick = (clientId: string, stepIndex: number) => {
@@ -111,7 +124,7 @@ export default function CRMDashboard() {
     <div className="flex min-h-screen flex-col bg-background">
       {/* Status Bar */}
       <StatusBar 
-        totalProjects={mockProjects.length}
+        totalProjects={projects.length}
         activeProjects={clients.filter(c => c.currentStage !== 'launch').length}
         completedToday={tasks.filter(t => t.completed).length}
         overdueCount={tasks.filter(t => !t.completed && t.dueAt < new Date()).length}
@@ -136,9 +149,10 @@ export default function CRMDashboard() {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         onOpenCalendar={() => setCalendarOpen(true)}
-        projects={mockProjects}
+        projects={projects}
         selectedProjectId={selectedProjectId}
         onProjectChange={setSelectedProjectId}
+        onCreateProject={() => setAddProjectDialogOpen(true)}
       />
 
       {viewMode === 'technical' ? (
@@ -185,8 +199,15 @@ export default function CRMDashboard() {
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         onAddClient={handleAddClient}
-        projects={mockProjects}
+        projects={projects}
         selectedProjectId={selectedProjectId}
+        onAddProject={handleAddProject}
+      />
+
+      <AddProjectDialog
+        open={addProjectDialogOpen}
+        onOpenChange={setAddProjectDialogOpen}
+        onAddProject={handleAddProject}
       />
 
       <CalendarModal

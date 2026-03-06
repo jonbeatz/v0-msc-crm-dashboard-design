@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, Plus, Film, Activity, Monitor, BarChart3, CalendarDays, ChevronDown, Folder, Archive, Check, LayoutGrid } from 'lucide-react'
+import { Search, Plus, Film, Activity, Monitor, BarChart3, CalendarDays, ChevronDown, Folder, Archive, Check, LayoutGrid, FolderPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -28,12 +28,13 @@ interface HeaderProps {
   projects: Project[]
   selectedProjectId: string
   onProjectChange: (projectId: string) => void
+  onCreateProject: () => void
 }
 
 // Mock velocity data for last 7 days
 const velocityData = [3, 5, 4, 7, 6, 8, 9]
 
-export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onViewModeChange, onOpenCalendar, projects, selectedProjectId, onProjectChange }: HeaderProps) {
+export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onViewModeChange, onOpenCalendar, projects, selectedProjectId, onProjectChange, onCreateProject }: HeaderProps) {
   const selectedProject = projects.find(p => p.id === selectedProjectId)
   const activeProjects = projects.filter(p => p.status === 'active')
   const archivedProjects = projects.filter(p => p.status === 'archived')
@@ -138,6 +139,15 @@ export function Header({ searchQuery, onSearchChange, onQuickAdd, viewMode, onVi
                 ))}
               </>
             )}
+            
+            <DropdownMenuSeparator className="bg-white/[0.06]" />
+            <DropdownMenuItem
+              onClick={onCreateProject}
+              className="flex items-center gap-3 rounded-lg cursor-pointer text-primary"
+            >
+              <FolderPlus className="h-4 w-4" />
+              <span className="text-sm font-medium">Create New Project</span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
